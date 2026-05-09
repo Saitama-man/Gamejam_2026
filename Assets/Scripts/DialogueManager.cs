@@ -4,6 +4,8 @@ using TMPro;
 
 public class DialogueManager : MonoBehaviour
 {
+    public static DialogueManager Instance { get; private set; }
+
     [Header("UI")]
     public GameObject dialoguePanel;
     public TMP_Text speakerNameText;
@@ -13,22 +15,33 @@ public class DialogueManager : MonoBehaviour
     public float typingSpeed = 0.03f;
     public KeyCode nextKey = KeyCode.Space;
 
-    private string[] currentLines;
-    private string currentSpeaker;
+    private DialogueLine[] currentLines;
     private int currentLineIndex;
 
     private bool isDialogueActive = false;
     private bool isTyping = false;
     private Coroutine typingCoroutine;
 
-    public bool IsDialogueActive()
+    private PlayerMovement currentPlayerMovement;
+
+    private void Awake()
     {
-        return isDialogueActive;
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning("В сцене найден второй DialogueManager. Лишний будет удалён.");
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
     }
 
     private void Start()
     {
-        dialoguePanel.SetActive(false);
+        if (dialoguePanel != null)
+        {
+            dialoguePanel.SetActive(false);
+        }
     }
 
     private void Update()
@@ -49,48 +62,78 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void StartDialogue(string speakerName, string[] lines)
+    public bool IsDialogueActive()
     {
+        return isDialogueActive;
+    }
+
+    public void StartDialogue(DialogueLine[] lines)
+    {
+        if (isDialogueActive)
+            return;
+
         if (lines == null || lines.Length == 0)
             return;
 
-        PlayerMovement playerMovement = FindFirstObjectByType<PlayerMovement>();
+        currentPlayerMovement = FindFirstObjectByType<PlayerMovement>();
 
-        if (playerMovement != null)
+        if (currentPlayerMovement != null)
         {
-            playerMovement.SetMovementEnabled(false);
+            currentPlayerMovement.SetMovementEnabled(false);
         }
 
-        currentSpeaker = speakerName;
         currentLines = lines;
         currentLineIndex = 0;
 
         isDialogueActive = true;
-        dialoguePanel.SetActive(true);
 
-        speakerNameText.text = currentSpeaker;
+        if (dialoguePanel != null)
+        {
+            dialoguePanel.SetActive(true);
+        }
 
         ShowCurrentLine();
     }
 
     private void ShowCurrentLine()
     {
+        if (currentLines == null || currentLineIndex >= currentLines.Length)
+        {
+            EndDialogue();
+            return;
+        }
+
+        DialogueLine line = currentLines[currentLineIndex];
+
+        if (speakerNameText != null)
+        {
+            speakerNameText.text = line.speakerName;
+        }
+
         if (typingCoroutine != null)
         {
             StopCoroutine(typingCoroutine);
         }
 
-        typingCoroutine = StartCoroutine(TypeLine(currentLines[currentLineIndex]));
+        typingCoroutine = StartCoroutine(TypeLine(line.text));
     }
 
-    private IEnumerator TypeLine(string line)
+    private IEnumerator TypeLine(string lineText)
     {
         isTyping = true;
-        dialogueText.text = "";
 
-        foreach (char letter in line)
+        if (dialogueText != null)
         {
-            dialogueText.text += letter;
+            dialogueText.text = "";
+        }
+
+        foreach (char letter in lineText)
+        {
+            if (dialogueText != null)
+            {
+                dialogueText.text += letter;
+            }
+
             yield return new WaitForSeconds(typingSpeed);
         }
 
@@ -104,7 +147,13 @@ public class DialogueManager : MonoBehaviour
             StopCoroutine(typingCoroutine);
         }
 
-        dialogueText.text = currentLines[currentLineIndex];
+        DialogueLine line = currentLines[currentLineIndex];
+
+        if (dialogueText != null)
+        {
+            dialogueText.text = line.text;
+        }
+
         isTyping = false;
     }
 
@@ -126,13 +175,18 @@ public class DialogueManager : MonoBehaviour
         isDialogueActive = false;
         isTyping = false;
 
-        dialoguePanel.SetActive(false);
-
-        PlayerMovement playerMovement = FindFirstObjectByType<PlayerMovement>();
-
-        if (playerMovement != null)
+        if (dialoguePanel != null)
         {
-            playerMovement.SetMovementEnabled(true);
+            dialoguePanel.SetActive(false);
         }
+
+        if (currentPlayerMovement != null)
+        {
+            currentPlayerMovement.SetMovementEnabled(true);
+        }
+
+        currentPlayerMovement = null;
+        currentLines = null;
+        currentLineIndex = 0;
     }
 }
