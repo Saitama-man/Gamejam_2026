@@ -407,13 +407,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 2066881591}
+        m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
+        m_MethodName: ToggleSettings
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1459,8 +1459,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2066881591}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: StartGame
-        m_Mode: 1
+        m_MethodName: LoadScene
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1524,7 +1524,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1914318146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1691,8 +1691,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b674106a92c45f4b9059a02be87db5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
-  gameplaySceneName: Level1_2D
   settingsPanel: {fileID: 1914318145}
+  mainMixer: {fileID: 0}
+  musicSlider: {fileID: 0}
 --- !u!4 &2066881592
 Transform:
   m_ObjectHideFlags: 0
@@ -1742,8 +1743,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -350, y: -200}
-  m_SizeDelta: {x: 700, y: -400}
+  m_AnchoredPosition: {x: -350, y: -150}
+  m_SizeDelta: {x: 700, y: -300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2130356639
 MonoBehaviour:
