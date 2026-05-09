@@ -579,7 +579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5a5572594dd1eb4182893f0e9a8ab81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadingLeafRotate
-  rotationSpeed: 60
+  rotationSpeed: 30
 --- !u!225 &1279597471
 CanvasGroup:
   m_ObjectHideFlags: 0
