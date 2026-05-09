@@ -1,45 +1,66 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
-    [Header("Настройки сцен")]
-    [Tooltip("Название геймплейной сцены в Build Settings")]
-    [SerializeField] private string gameplaySceneName = "Level1_2D"; // Обновил под твою текущую цель
-
     [Header("UI Панели")]
     [SerializeField] private GameObject settingsPanel;
 
+    [Header("Звук")]
+    [SerializeField] private AudioMixer mainMixer;
+    [SerializeField] private Slider musicSlider;
+
     private void Start()
     {
-        // При старте убеждаемся, что настройки скрыты
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
-    }
 
-    // Метод для кнопки Start
-    public void StartGame()
-    {
-        SceneManager.LoadScene(gameplaySceneName);
-    }
-
-    // Метод для кнопки Settings (открыть/закрыть)
-    public void ToggleSettings(bool isOpen)
-    {
-        if (settingsPanel != null)
+        float savedVolume = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
+        if (musicSlider != null)
         {
-            settingsPanel.SetActive(isOpen);
+            musicSlider.value = savedVolume;
+            SetVolume(savedVolume);
+        }
+    }
+
+    // --- УНИВЕРСАЛЬНАЯ ЛОГИКА СЦЕН ---
+
+    // Этот метод теперь можно вызывать из ЛЮБОЙ кнопки, просто вписав имя сцены в Unity
+    public void LoadScene(string sceneName)
+    {
+        if (!string.IsNullOrEmpty(sceneName))
+        {
+            SceneManager.LoadScene(sceneName);
         }
         else
         {
-            Debug.LogWarning("Settings Panel не назначена в инспекторе!");
+            Debug.LogError("Имя сцены не указано в кнопке!");
         }
     }
 
-    // Метод для кнопки Exit
+    // Метод для простой перезагрузки текущей сцены (полезно для кнопки Restart)
+    public void ReloadCurrentScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    // --- ОСТАЛЬНАЯ ЛОГИКА ---
+
+    public void ToggleSettings(bool isOpen) => settingsPanel.SetActive(isOpen);
+
     public void ExitGame()
     {
         Debug.Log("Выход из игры...");
         Application.Quit();
+    }
+
+    public void SetVolume(float sliderValue)
+    {
+        float volume = Mathf.Log10(sliderValue) * 20;
+        if (sliderValue == 0) volume = -80;
+        mainMixer.SetFloat("MusicVol", volume);
+        PlayerPrefs.SetFloat("MusicVolume", sliderValue);
     }
 }

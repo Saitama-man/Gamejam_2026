@@ -1459,14 +1459,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2066881591}
         m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
-        m_MethodName: StartGame
-        m_Mode: 1
+        m_MethodName: LoadScene
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Level2_3D
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1910696723
@@ -1691,8 +1691,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b674106a92c45f4b9059a02be87db5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
-  gameplaySceneName: Level1_2D
   settingsPanel: {fileID: 1914318145}
+  mainMixer: {fileID: 0}
+  musicSlider: {fileID: 0}
 --- !u!4 &2066881592
 Transform:
   m_ObjectHideFlags: 0
