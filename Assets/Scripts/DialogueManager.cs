@@ -22,6 +22,8 @@ public class DialogueManager : MonoBehaviour
     private bool isTyping = false;
     private Coroutine typingCoroutine;
 
+    private bool canAdvanceDialogue = false;
+
     private PlayerMovement currentPlayerMovement;
 
     private void Awake()
@@ -43,10 +45,12 @@ public class DialogueManager : MonoBehaviour
             dialoguePanel.SetActive(false);
         }
     }
-
     private void Update()
     {
         if (!isDialogueActive)
+            return;
+
+        if (!canAdvanceDialogue)
             return;
 
         if (Input.GetKeyDown(nextKey) || Input.GetKeyDown(KeyCode.E))
@@ -86,6 +90,8 @@ public class DialogueManager : MonoBehaviour
         currentLineIndex = 0;
 
         isDialogueActive = true;
+        canAdvanceDialogue = false;
+        StartCoroutine(EnableDialogueAdvanceNextFrame());
 
         if (dialoguePanel != null)
         {
@@ -174,6 +180,7 @@ public class DialogueManager : MonoBehaviour
     {
         isDialogueActive = false;
         isTyping = false;
+        canAdvanceDialogue = false;
 
         if (dialoguePanel != null)
         {
@@ -188,5 +195,11 @@ public class DialogueManager : MonoBehaviour
         currentPlayerMovement = null;
         currentLines = null;
         currentLineIndex = 0;
+    }
+
+    private IEnumerator EnableDialogueAdvanceNextFrame()
+    {
+        yield return null;
+        canAdvanceDialogue = true;
     }
 }
