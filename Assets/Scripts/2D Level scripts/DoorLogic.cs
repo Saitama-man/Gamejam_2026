@@ -4,11 +4,12 @@ using UnityEngine.SceneManagement;
 public class DoorLogic : MonoBehaviour
 {
     [Header("Scene")]
-    public string sceneToLoad;
+    [SerializeField] private string sceneToLoad;
+    [SerializeField] private string loadingSceneName = "LoadingScreen";
 
     [Header("Interaction")]
-    public bool requireButtonPress = false;
-    public KeyCode interactKey = KeyCode.E;
+    [SerializeField] private bool requireButtonPress = false;
+    [SerializeField] private KeyCode interactKey = KeyCode.E;
 
     private bool playerInside = false;
     private bool alreadyTriggered = false;
@@ -34,7 +35,7 @@ public class DoorLogic : MonoBehaviour
         }
         else
         {
-            Debug.Log("Нажми E, чтобы перейти");
+            Debug.Log("Нажми E, чтобы перейти.");
         }
     }
 
@@ -55,7 +56,7 @@ public class DoorLogic : MonoBehaviour
 
         if (string.IsNullOrEmpty(sceneToLoad))
         {
-            Debug.LogError("Scene To Load не заполнена!");
+            Debug.LogError("DoorLogic: Scene To Load не заполнена!", this);
             alreadyTriggered = false;
             return;
         }
@@ -67,15 +68,17 @@ public class DoorLogic : MonoBehaviour
             playerMovement.SetMovementEnabled(false);
         }
 
+        SceneLoadData.TargetSceneName = sceneToLoad;
+
         SceneFadeTransition fadeTransition = FindFirstObjectByType<SceneFadeTransition>();
 
         if (fadeTransition != null)
         {
-            fadeTransition.FadeToScene(sceneToLoad);
+            fadeTransition.FadeToScene(loadingSceneName);
         }
         else
         {
-            SceneManager.LoadScene(sceneToLoad);
+            SceneManager.LoadScene(loadingSceneName);
         }
     }
 }
