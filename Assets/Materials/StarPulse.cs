@@ -3,53 +3,61 @@ using UnityEngine;
 [RequireComponent(typeof(Renderer))]
 public class StarPulse : MonoBehaviour
 {
-    [Header("Emission Color")]
-    [SerializeField]
-    private Color emissionColor = new Color(
-        26f / 255f,
-        133f / 255f,
-        229f / 255f
-    );
-
-    [Header("HDR Intensity")]
-    [SerializeField] private float minHDRIntensity = 7.8f;
-    [SerializeField] private float maxHDRIntensity = 9.2f;
-    [SerializeField] private float pulseSpeed = 1.5f;
+    [Header("Emission Pulse")]
+    [SerializeField] private float minEmissionMultiplier = 0.75f;
+    [SerializeField] private float maxEmissionMultiplier = 1.25f;
+    [SerializeField] private float pulseSpeed = 2f;
 
     [Header("Scale Pulse")]
     [SerializeField] private bool pulseScale = true;
-    [SerializeField] private float minScale = 0.24f;
-    [SerializeField] private float maxScale = 0.27f;
+    [SerializeField] private float scalePulseAmount = 0.05f;
 
     private Renderer starRenderer;
     private Material mat;
+    private Color originalEmission;
+    private Vector3 originalScale;
 
     private void Awake()
     {
         starRenderer = GetComponent<Renderer>();
         mat = starRenderer.material;
 
+        originalScale = transform.localScale;
+
         mat.EnableKeyword("_EMISSION");
 
-        if (mat.HasProperty("_BaseColor"))
-            mat.SetColor("_BaseColor", Color.white);
+        if (mat.HasProperty("_EmissionColor"))
+        {
+            originalEmission = mat.GetColor("_EmissionColor");
+        }
+        else
+        {
+            Debug.LogError("StarPulse: у материала нет свойства _EmissionColor.", this);
+            enabled = false;
+        }
     }
 
     private void Update()
     {
         float pulse = Mathf.Sin(Time.time * pulseSpeed) * 0.5f + 0.5f;
 
-        float hdrIntensity = Mathf.Lerp(minHDRIntensity, maxHDRIntensity, pulse);
+        float emissionMultiplier = Mathf.Lerp(
+            minEmissionMultiplier,
+            maxEmissionMultiplier,
+            pulse
+        );
 
-        // Важно: имитируем Unity HDR Color Intensity
-        Color finalEmission = emissionColor * Mathf.Pow(2f, hdrIntensity);
-
-        mat.SetColor("_EmissionColor", finalEmission);
+        mat.SetColor("_EmissionColor", originalEmission * emissionMultiplier);
 
         if (pulseScale)
         {
-            float scale = Mathf.Lerp(minScale, maxScale, pulse);
-            transform.localScale = Vector3.one * scale;
+            float scaleMultiplier = 1f + Mathf.Lerp(
+                -scalePulseAmount,
+                scalePulseAmount,
+                pulse
+            );
+
+            transform.localScale = originalScale * scaleMultiplier;
         }
     }
 }
