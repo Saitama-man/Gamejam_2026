@@ -1,8 +1,16 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ConstellationPuzzleMVP : MonoBehaviour
 {
+    [System.Serializable]
+    public struct StarLine
+    {
+        public int from;
+        public int to;
+    }
+
     [Header("Camera Check")]
     [SerializeField] private Transform constellationCenter;
     [SerializeField] private Transform mainCamera;
@@ -17,22 +25,27 @@ public class ConstellationPuzzleMVP : MonoBehaviour
 
     [Header("Constellation Lines")]
     [SerializeField] private Transform[] starPoints;
+    [SerializeField] private StarLine[] starLines;
     [SerializeField] private Material lineMaterial;
     [SerializeField] private float lineWidth = 0.04f;
 
-    [Header("Zodiac Image")]
+    [Header("Zodiac Image Fade")]
     [SerializeField] private Image zodiacImage;
+    [SerializeField] private CanvasGroup zodiacCanvasGroup;
+    [SerializeField] private float zodiacFadeDuration = 1.2f;
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
+    [SerializeField] private bool drawDebugGizmos = true;
 
     private float holdTimer;
     private bool solved;
+    private Transform linesRoot;
 
     private void Start()
     {
-        if (zodiacImage != null)
-            zodiacImage.gameObject.SetActive(false);
+        PrepareZodiacImage();
+        RemoveOldLines();
     }
 
     private void Update()
@@ -47,24 +60,52 @@ public class ConstellationPuzzleMVP : MonoBehaviour
             holdTimer += Time.deltaTime;
 
             if (showDebugLogs)
-                Debug.Log($"В правильной зоне: {angle:0.0}°, удержание {holdTimer:0.0}/{holdTimeToSolve}");
+            {
+                Debug.Log(
+                    $"В правильной зоне: {angle:0.00}°, " +
+                    $"удержание {holdTimer:0.00}/{holdTimeToSolve:0.00}"
+                );
+            }
 
             if (holdTimer >= holdTimeToSolve)
             {
+                if (showDebugLogs)
+                    Debug.Log("УСЛОВИЕ РЕШЕНИЯ ДОСТИГНУТО");
+
                 SolvePuzzle();
             }
         }
         else
         {
+            if (holdTimer > 0f && showDebugLogs)
+            {
+                Debug.Log(
+                    $"Вышел из зоны: {angle:0.00}°. " +
+                    "Таймер сброшен."
+                );
+            }
+
             holdTimer = 0f;
         }
     }
 
     private float GetCameraAngleToCorrectPoint()
     {
-        if (constellationCenter == null || mainCamera == null || correctViewPoint == null)
+        if (constellationCenter == null)
         {
-            Debug.LogError("Не назначены Constellation Center, Main Camera или Correct View Point.");
+            Debug.LogError("Не назначен Constellation Center.");
+            return 180f;
+        }
+
+        if (mainCamera == null)
+        {
+            Debug.LogError("Не назначена Main Camera.");
+            return 180f;
+        }
+
+        if (correctViewPoint == null)
+        {
+            Debug.LogError("Не назначен Correct View Point.");
             return 180f;
         }
 
@@ -79,20 +120,27 @@ public class ConstellationPuzzleMVP : MonoBehaviour
 
     private void SolvePuzzle()
     {
+        if (solved)
+            return;
+
         solved = true;
+        holdTimer = 0f;
 
         if (showDebugLogs)
             Debug.Log("Созвездие решено!");
 
         DisableCameraControl();
         DrawConstellationLines();
-        ShowZodiacImage();
+        StartCoroutine(FadeInZodiacImage());
     }
 
     private void DisableCameraControl()
     {
         if (orbitCameraScript == null)
+        {
+            Debug.LogWarning("Orbit Camera Script не назначен.");
             return;
+        }
 
         orbitCameraScript.SendMessage(
             "SetCanControl",
@@ -100,7 +148,9 @@ public class ConstellationPuzzleMVP : MonoBehaviour
             SendMessageOptions.DontRequireReceiver
         );
 
-        orbitCameraScript.enabled = false;
+        // ВАЖНО:
+        // Не отключаем сам компонент orbitCameraScript.enabled = false.
+        // Достаточно запретить управление через SetCanControl(false).
     }
 
     private void DrawConstellationLines()
@@ -111,39 +161,168 @@ public class ConstellationPuzzleMVP : MonoBehaviour
             return;
         }
 
-        GameObject lineObject = new GameObject("SolvedConstellationLines");
-        lineObject.transform.SetParent(constellationCenter, worldPositionStays: true);
-
-        LineRenderer lineRenderer = lineObject.AddComponent<LineRenderer>();
-
-        lineRenderer.positionCount = starPoints.Length;
-        lineRenderer.useWorldSpace = true;
-        lineRenderer.widthMultiplier = lineWidth;
-
-        if (lineMaterial != null)
-            lineRenderer.material = lineMaterial;
-
-        for (int i = 0; i < starPoints.Length; i++)
+        if (starLines == null || starLines.Length == 0)
         {
-            lineRenderer.SetPosition(i, starPoints[i].position);
+            Debug.LogWarning("Не заданы связи Star Lines.");
+            return;
+        }
+
+        if (linesRoot != null)
+            Destroy(linesRoot.gameObject);
+
+        GameObject rootObject = new GameObject("SolvedConstellationLines");
+        rootObject.transform.SetParent(constellationCenter, true);
+        linesRoot = rootObject.transform;
+
+        for (int i = 0; i < starLines.Length; i++)
+        {
+            int from = starLines[i].from;
+            int to = starLines[i].to;
+
+            if (!IsValidStarIndex(from) || !IsValidStarIndex(to))
+            {
+                Debug.LogWarning($"Неверная связь линии {i}: {from} → {to}");
+                continue;
+            }
+
+            CreateLineSegment(
+                starPoints[from].position,
+                starPoints[to].position,
+                $"Line_{from}_{to}"
+            );
         }
     }
 
-    private void ShowZodiacImage()
+    private void CreateLineSegment(Vector3 start, Vector3 end, string lineName)
     {
-        if (zodiacImage != null)
-            zodiacImage.gameObject.SetActive(true);
+        GameObject lineObject = new GameObject(lineName);
+        lineObject.transform.SetParent(linesRoot, true);
+
+        LineRenderer lineRenderer = lineObject.AddComponent<LineRenderer>();
+
+        lineRenderer.useWorldSpace = true;
+        lineRenderer.positionCount = 2;
+
+        lineRenderer.SetPosition(0, start);
+        lineRenderer.SetPosition(1, end);
+
+        lineRenderer.widthMultiplier = lineWidth;
+        lineRenderer.numCapVertices = 4;
+        lineRenderer.numCornerVertices = 4;
+
+        if (lineMaterial != null)
+            lineRenderer.material = lineMaterial;
+        else
+            Debug.LogWarning("Line Material не назначен.");
+    }
+
+    private bool IsValidStarIndex(int index)
+    {
+        return index >= 0 &&
+               index < starPoints.Length &&
+               starPoints[index] != null;
+    }
+
+    private void PrepareZodiacImage()
+    {
+        if (zodiacImage == null)
+        {
+            Debug.LogWarning("Zodiac Image не назначен.");
+            return;
+        }
+
+        zodiacImage.gameObject.SetActive(true);
+
+        if (zodiacCanvasGroup == null)
+            zodiacCanvasGroup = zodiacImage.GetComponent<CanvasGroup>();
+
+        if (zodiacCanvasGroup == null)
+            zodiacCanvasGroup = zodiacImage.gameObject.AddComponent<CanvasGroup>();
+
+        zodiacCanvasGroup.alpha = 0f;
+    }
+
+    private IEnumerator FadeInZodiacImage()
+    {
+        if (zodiacImage == null)
+        {
+            Debug.LogWarning("Нельзя показать Zodiac Image: объект не назначен.");
+            yield break;
+        }
+
+        zodiacImage.gameObject.SetActive(true);
+
+        if (zodiacCanvasGroup == null)
+            zodiacCanvasGroup = zodiacImage.GetComponent<CanvasGroup>();
+
+        if (zodiacCanvasGroup == null)
+            zodiacCanvasGroup = zodiacImage.gameObject.AddComponent<CanvasGroup>();
+
+        zodiacCanvasGroup.alpha = 0f;
+
+        if (zodiacFadeDuration <= 0f)
+        {
+            zodiacCanvasGroup.alpha = 1f;
+            yield break;
+        }
+
+        float timer = 0f;
+
+        while (timer < zodiacFadeDuration)
+        {
+            timer += Time.deltaTime;
+            zodiacCanvasGroup.alpha = Mathf.Clamp01(timer / zodiacFadeDuration);
+            yield return null;
+        }
+
+        zodiacCanvasGroup.alpha = 1f;
+    }
+
+    private void RemoveOldLines()
+    {
+        if (constellationCenter == null)
+            return;
+
+        Transform oldLines = constellationCenter.Find("SolvedConstellationLines");
+
+        if (oldLines != null)
+            Destroy(oldLines.gameObject);
     }
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
-        if (constellationCenter == null || correctViewPoint == null)
+        if (!drawDebugGizmos)
             return;
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(constellationCenter.position, correctViewPoint.position);
-        Gizmos.DrawWireSphere(correctViewPoint.position, 0.4f);
+        if (constellationCenter != null && correctViewPoint != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(constellationCenter.position, correctViewPoint.position);
+            Gizmos.DrawWireSphere(correctViewPoint.position, 0.4f);
+        }
+
+        if (starPoints == null || starLines == null)
+            return;
+
+        Gizmos.color = Color.cyan;
+
+        for (int i = 0; i < starLines.Length; i++)
+        {
+            int from = starLines[i].from;
+            int to = starLines[i].to;
+
+            if (from < 0 || to < 0)
+                continue;
+
+            if (from >= starPoints.Length || to >= starPoints.Length)
+                continue;
+
+            if (starPoints[from] == null || starPoints[to] == null)
+                continue;
+
+            Gizmos.DrawLine(starPoints[from].position, starPoints[to].position);
+        }
     }
 #endif
 }
