@@ -9836,12 +9836,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560df04174bcec4db10ecf7995a7699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarPulse
-  emissionColor: {r: 0.101960786, g: 0.52156866, b: 0.8980392, a: 1}
-  emissionIntensity: 4.9
-  pulseAmount: 1
+  minEmissionMultiplier: 0.75
+  maxEmissionMultiplier: 1.25
   pulseSpeed: 2
   pulseScale: 1
-  baseScale: 0.25
   scalePulseAmount: 0.02
 --- !u!1 &3731352358673477339
 GameObject:
@@ -9969,12 +9967,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560df04174bcec4db10ecf7995a7699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarPulse
-  emissionColor: {r: 0.101960786, g: 0.52156866, b: 0.8980392, a: 1}
-  emissionIntensity: 4.9
-  pulseAmount: 1
+  minEmissionMultiplier: 0.75
+  maxEmissionMultiplier: 1.25
   pulseSpeed: 2
   pulseScale: 1
-  baseScale: 0.25
   scalePulseAmount: 0.02
 --- !u!1 &3789989525719729197
 GameObject:
@@ -29446,12 +29442,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560df04174bcec4db10ecf7995a7699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarPulse
-  emissionColor: {r: 0.101960786, g: 0.52156866, b: 0.8980392, a: 1}
-  emissionIntensity: 4.9
-  pulseAmount: 1
+  minEmissionMultiplier: 0.75
+  maxEmissionMultiplier: 1.25
   pulseSpeed: 2
   pulseScale: 1
-  baseScale: 0.25
   scalePulseAmount: 0.02
 --- !u!1 &5812487635142127328
 GameObject:
@@ -29579,12 +29573,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560df04174bcec4db10ecf7995a7699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarPulse
-  emissionColor: {r: 0.101960786, g: 0.52156866, b: 0.8980392, a: 1}
-  emissionIntensity: 4.9
-  pulseAmount: 1
+  minEmissionMultiplier: 0.75
+  maxEmissionMultiplier: 1.25
   pulseSpeed: 2
   pulseScale: 1
-  baseScale: 0.25
   scalePulseAmount: 0.02
 --- !u!1 &6365147452228106609
 GameObject:
@@ -29712,12 +29704,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560df04174bcec4db10ecf7995a7699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarPulse
-  emissionColor: {r: 0.101960786, g: 0.52156866, b: 0.8980392, a: 1}
-  emissionIntensity: 4.9
-  pulseAmount: 1
+  minEmissionMultiplier: 0.75
+  maxEmissionMultiplier: 1.25
   pulseSpeed: 2
   pulseScale: 1
-  baseScale: 0.25
   scalePulseAmount: 0.02
 --- !u!1 &6902117554396846329
 GameObject:
@@ -34681,12 +34671,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560df04174bcec4db10ecf7995a7699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarPulse
-  emissionColor: {r: 0.101960786, g: 0.52156866, b: 0.8980392, a: 1}
-  emissionIntensity: 4.9
-  pulseAmount: 1
+  minEmissionMultiplier: 0.75
+  maxEmissionMultiplier: 1.25
   pulseSpeed: 2
   pulseScale: 1
-  baseScale: 0.25
   scalePulseAmount: 0.02
 --- !u!1 &8928459062828040888
 GameObject:
@@ -34814,10 +34802,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4560df04174bcec4db10ecf7995a7699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarPulse
-  emissionColor: {r: 0.101960786, g: 0.52156866, b: 0.8980392, a: 1}
-  emissionIntensity: 4.9
-  pulseAmount: 1
+  minEmissionMultiplier: 0.75
+  maxEmissionMultiplier: 1.25
   pulseSpeed: 2
   pulseScale: 1
-  baseScale: 0.25
   scalePulseAmount: 0.02
