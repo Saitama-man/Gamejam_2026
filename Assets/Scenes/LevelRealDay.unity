@@ -288,6 +288,113 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
+--- !u!1 &494334604
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 494334605}
+  - component: {fileID: 494334607}
+  - component: {fileID: 494334606}
+  m_Layer: 0
+  m_Name: Ded
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &494334605
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494334604}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.2, y: -0.4, z: 0}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1722582222}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &494334606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494334604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 155685f59038c2549b39238b8010d7d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ParallaxLayer
+  cameraTransform: {fileID: 1715116718}
+  parallaxFactorX: 0
+  parallaxFactorY: 0
+--- !u!212 &494334607
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494334604}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: -589098415
+  m_SortingLayer: 7
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 21300000, guid: 8c02b081766b1ac49bbfc872cbfda28c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 21.086666, y: 3.603678}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
 --- !u!1 &690679264 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9134515079947976291, guid: 644c0459d4e44044a842fcd402c8f18e, type: 3}
@@ -1566,6 +1673,7 @@ Transform:
   - {fileID: 1321227467}
   - {fileID: 441810844}
   - {fileID: 2058146260}
+  - {fileID: 494334605}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1804829706
@@ -1915,6 +2023,125 @@ PrefabInstance:
     - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
       propertyPath: setStoryFlagOnComplete
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.size
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[0].text
+      value: Grandpa, do you need help?
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[1].text
+      value: Thank you, little one. I am just resting and looking at the sky.
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[2].text
+      value: At the stars?
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[3].text
+      value: Yes. Stars can tell many stories to those who know how to listen.
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[4].text
+      value: Who knows how?
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[5].text
+      value: Mirzo Ulugbek. A great scholar. He built an observatory to study the
+        stars.
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[6].text
+      value: An observatory? Can people learn there?
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[7].text
+      value: Yes, they can. But Mirzo Ulugbek does not take everyone as his student.
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[8].text
+      value: Who does he take?
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[9].text
+      value: Someone who loves learning, is not afraid of hard tasks, and never gives
+        up.
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[10].text
+      value: I really want to learn!
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[11].text
+      value: Then go to the observatory. Maybe the stars are already waiting for
+        you.
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[12].text
+      value: Thank you, Grandpa! I will go!
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[13].text
+      value: Go, little one. Your path to the stars begins today!
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[0].speakerName
+      value: Ali
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[1].speakerName
+      value: Elder
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[2].speakerName
+      value: Ali
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[3].speakerName
+      value: Elder
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[4].speakerName
+      value: Ali
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[5].speakerName
+      value: Elder
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[6].speakerName
+      value: Ali
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[7].speakerName
+      value: Elder
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[8].speakerName
+      value: Ali
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[9].speakerName
+      value: Elder
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[10].speakerName
+      value: Ali
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[11].speakerName
+      value: Elder
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[12].speakerName
+      value: Ali
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295885644913373848, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
+      propertyPath: dialogueLines.Array.data[13].speakerName
+      value: Elder
       objectReference: {fileID: 0}
     - target: {fileID: 8246742602626995021, guid: 91e0fd10113c546499281b0d91086b09, type: 3}
       propertyPath: m_Name
