@@ -37,18 +37,29 @@ public class PuzzleGameManager : MonoBehaviour
     [Header("Camera Random Start")]
     [SerializeField] private float minStartAngleFromCorrectPoint = 50f;
 
-    [Header("Cutscenes")]
-    [SerializeField] private string winSceneName;
-    [SerializeField] private string loseSceneName;
+    [Header("Level Transition")]
+    [SerializeField] private float levelTransitionDelay = 1.5f;
 
-    [Header("Flow")]
-    [SerializeField] private float delayBeforeNextConstellation = 1.5f;
+    [Header("Timer Result Rules")]
+    [SerializeField] private int minimumConstellationsForSuccess = 3;
+
+    [Header("Scenes")]
+    [Tooltip("Сцена успеха. Открывается, если игрок собрал минимум нужное количество созвездий или прошёл все уровни.")]
+    [SerializeField] private Object successScene;
+
+    [Tooltip("Сцена проигрыша. Открывается, если игрок собрал меньше нужного количества созвездий.")]
+    [SerializeField] private Object loseScene;
+
+    [Header("Fallback Scene Names")]
+    [SerializeField] private string successSceneName;
+    [SerializeField] private string loseSceneName;
 
     private const string ConstellationCenterName = "Constellation Center";
     private const string CorrectViewPointName = "CorrectViewPoint";
     private const string HolderName = "CurrentConstellationHolder";
 
     private int currentLevelIndex;
+    private int completedConstellations;
     private GameObject currentConstellation;
     private bool gameFinished;
     private Coroutine nextLevelCoroutine;
@@ -61,7 +72,7 @@ public class PuzzleGameManager : MonoBehaviour
             puzzle.OnPuzzleSolved += OnPuzzleSolved;
 
         if (timer != null)
-            timer.OnTimeExpired += LoseGame;
+            timer.OnTimeExpired += FinishByTimer;
 
         if (mapUI != null)
         {
@@ -71,6 +82,8 @@ public class PuzzleGameManager : MonoBehaviour
         }
 
         currentLevelIndex = 0;
+        completedConstellations = 0;
+        gameFinished = false;
 
         if (clearHolderBeforeSpawn)
             ClearConstellationHolder();
@@ -87,7 +100,7 @@ public class PuzzleGameManager : MonoBehaviour
             puzzle.OnPuzzleSolved -= OnPuzzleSolved;
 
         if (timer != null)
-            timer.OnTimeExpired -= LoseGame;
+            timer.OnTimeExpired -= FinishByTimer;
 
         if (mapUI != null)
         {
@@ -105,7 +118,7 @@ public class PuzzleGameManager : MonoBehaviour
 
         if (currentLevelIndex >= levels.Length)
         {
-            WinGame();
+            FinishWithSuccess();
             return;
         }
 
@@ -406,6 +419,8 @@ public class PuzzleGameManager : MonoBehaviour
         if (gameFinished)
             return;
 
+        completedConstellations++;
+
         if (mapUI != null)
             mapUI.SetConstellationCompleted(currentLevelIndex, constellationSprite);
 
@@ -413,7 +428,7 @@ public class PuzzleGameManager : MonoBehaviour
 
         if (currentLevelIndex >= levels.Length)
         {
-            WinGame();
+            FinishWithSuccess();
         }
         else
         {
@@ -426,7 +441,11 @@ public class PuzzleGameManager : MonoBehaviour
 
     private IEnumerator LoadNextAfterDelay()
     {
-        yield return new WaitForSeconds(delayBeforeNextConstellation);
+        float safeDelay = Mathf.Max(0f, levelTransitionDelay);
+
+        if (safeDelay > 0f)
+            yield return new WaitForSeconds(safeDelay);
+
         LoadCurrentLevel();
     }
 
@@ -442,41 +461,69 @@ public class PuzzleGameManager : MonoBehaviour
             timer.ResumeTimer();
     }
 
-    private void LoseGame()
+    private void FinishByTimer()
     {
         if (gameFinished)
             return;
 
-        gameFinished = true;
-
-        if (nextLevelCoroutine != null)
-            StopCoroutine(nextLevelCoroutine);
-
-        if (timer != null)
-            timer.StopTimer();
-
-        if (!string.IsNullOrEmpty(loseSceneName))
-            SceneManager.LoadScene(loseSceneName);
+        if (completedConstellations < minimumConstellationsForSuccess)
+            FinishWithLose();
         else
-            Debug.Log("Проигрыш. Lose Scene Name не задан.");
+            FinishWithSuccess();
     }
 
-    private void WinGame()
+    private void FinishWithSuccess()
     {
         if (gameFinished)
             return;
 
         gameFinished = true;
 
+        StopActiveSystems();
+
+        LoadScene(successScene, successSceneName, "Успех");
+    }
+
+    private void FinishWithLose()
+    {
+        if (gameFinished)
+            return;
+
+        gameFinished = true;
+
+        StopActiveSystems();
+
+        LoadScene(loseScene, loseSceneName, "Проигрыш");
+    }
+
+    private void StopActiveSystems()
+    {
         if (nextLevelCoroutine != null)
             StopCoroutine(nextLevelCoroutine);
 
         if (timer != null)
             timer.StopTimer();
 
-        if (!string.IsNullOrEmpty(winSceneName))
-            SceneManager.LoadScene(winSceneName);
-        else
-            Debug.Log("Победа. Win Scene Name не задан.");
+        if (orbitCamera != null)
+            orbitCamera.SetCanControl(false);
+    }
+
+    private void LoadScene(Object sceneAsset, string fallbackSceneName, string debugContext)
+    {
+        string sceneName = "";
+
+        if (sceneAsset != null)
+            sceneName = sceneAsset.name;
+
+        if (string.IsNullOrEmpty(sceneName))
+            sceneName = fallbackSceneName;
+
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            Debug.LogWarning($"{debugContext}: сцена не назначена.");
+            return;
+        }
+
+        SceneManager.LoadScene(sceneName);
     }
 }

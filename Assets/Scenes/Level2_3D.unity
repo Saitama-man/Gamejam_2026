@@ -368,8 +368,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -691.9, y: -343.7}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -702.885, y: -354.685}
+  m_SizeDelta: {x: 78.03, y: 78.03}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &618830789
 MonoBehaviour:
@@ -391,7 +391,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2e621cfeeac930545809c3a2e5614eda, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 77888598ec3561149acd5f653edc41f5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -600,7 +600,7 @@ MonoBehaviour:
   - from: 8
     to: 2
   - from: 7
-    to: 8
+    to: 0
   lineMaterial: {fileID: 2100000, guid: 4e6e48d32392c594b951cb984804a152, type: 2}
   lineWidth: 0.04
   zodiacImage: {fileID: 418272455}
@@ -621,6 +621,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
   levels:
+  - constellationName: Ursa Minor
+    constellationPrefab: {fileID: 757983276105428363, guid: b4b92caf96d941f478a05126855a1626, type: 3}
+    zodiacSprite: {fileID: 21300000, guid: 48ae1d09ddbdcb549a35c57de817d8e3, type: 3}
+    starLines:
+    - from: 0
+      to: 1
+    - from: 1
+      to: 2
+    - from: 2
+      to: 3
+    - from: 3
+      to: 4
   - constellationName: Aquila
     constellationPrefab: {fileID: 6613964753693977666, guid: 00166fdb8307c87498af3bd156220395, type: 3}
     zodiacSprite: {fileID: 21300000, guid: 7caf9ab2d1883ce40b5d33b800bcf34f, type: 3}
@@ -629,17 +641,13 @@ MonoBehaviour:
     constellationPrefab: {fileID: 1746339258723299003, guid: e298d11e944690a46a87d25df9897d49, type: 3}
     zodiacSprite: {fileID: 21300000, guid: f4ca0e770e518164c92b3da23a114baf, type: 3}
     starLines: []
-  - constellationName: Pegas
-    constellationPrefab: {fileID: 5804293282035002908, guid: f9abe1bb910cfac408c85bb11bfa94ac, type: 3}
-    zodiacSprite: {fileID: 21300000, guid: 5596c28cbb7c63a4fb61206befa6a3b6, type: 3}
-    starLines: []
   - constellationName: Pisces
     constellationPrefab: {fileID: 1010631831849080597, guid: ccd04ef13377845409f9c37dcafe07b9, type: 3}
     zodiacSprite: {fileID: 21300000, guid: 6688e7108a46a32469116de9fbb6d102, type: 3}
     starLines: []
-  - constellationName: Ursa Minor
-    constellationPrefab: {fileID: 757983276105428363, guid: b4b92caf96d941f478a05126855a1626, type: 3}
-    zodiacSprite: {fileID: 21300000, guid: 48ae1d09ddbdcb549a35c57de817d8e3, type: 3}
+  - constellationName: Pegas
+    constellationPrefab: {fileID: 5804293282035002908, guid: f9abe1bb910cfac408c85bb11bfa94ac, type: 3}
+    zodiacSprite: {fileID: 21300000, guid: 5596c28cbb7c63a4fb61206befa6a3b6, type: 3}
     starLines: []
   constellationHolder: {fileID: 1141750944}
   puzzle: {fileID: 857809608}
@@ -653,9 +661,12 @@ MonoBehaviour:
   resetPrefabScaleOnSpawn: 1
   clearHolderBeforeSpawn: 1
   minStartAngleFromCorrectPoint: 50
-  winSceneName: 
+  levelTransitionDelay: 1.5
+  minimumConstellationsForSuccess: 3
+  successScene: {fileID: 0}
+  loseScene: {fileID: 0}
+  successSceneName: 
   loseSceneName: 
-  delayBeforeNextConstellation: 1.5
 --- !u!1 &898252247
 GameObject:
   m_ObjectHideFlags: 0
@@ -701,7 +712,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleTimer
   startSeconds: 300
-  timerText: {fileID: 0}
+  timerText: {fileID: 1876933949}
 --- !u!1 &1032656744
 GameObject:
   m_ObjectHideFlags: 0
@@ -1317,7 +1328,7 @@ Transform:
   m_GameObject: {fileID: 1804826575}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.15, z: 0}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1383,8 +1394,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 5:00
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 583246e98e020f04fb8bbe20bded8ce8, type: 2}
+  m_sharedMaterial: {fileID: 5846561893858431366, guid: 583246e98e020f04fb8bbe20bded8ce8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1414,7 +1425,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -1447,7 +1458,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 123.727295, w: 0}
+  m_margin: {x: -19.46637, y: 0, z: 123.727295, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1561,7 +1572,7 @@ Transform:
   m_GameObject: {fileID: 2034827494}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -41.4, y: 15.040001, z: 0}
+  m_LocalPosition: {x: -40, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
