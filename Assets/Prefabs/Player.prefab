@@ -234,7 +234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fffc9df6aa92da0408f540d89fdcb71f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleWalkAnimation
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 7039948236028464374}
+  playerMovement: {fileID: 2580751380386003132}
   walkFrames:
   - {fileID: 21300000, guid: 393f0e9a500cbaf408a261a7e1624ea5, type: 3}
   - {fileID: 21300000, guid: 8db355e4379c53145911ace6f20bc9ed, type: 3}
