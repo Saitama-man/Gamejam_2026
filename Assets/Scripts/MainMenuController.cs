@@ -5,87 +5,150 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
-    [Header("UI & Panels")]
-    public GameObject settingsPanel;
-    public Slider volumeSlider; // Ползунок музыки
-    public Slider sfxSlider;    // НОВОЕ: Ползунок звуков (SFX)
+	[Header("Scene Settings")]
+	[SerializeField] private string gameplaySceneName = "LevelRealNight";
+	[SerializeField] private string loadingSceneName = "LoadingScreen";
 
-    [Header("Audio Settings")]
-    public AudioMixer mainMixer;
-    public AudioSource sfxSource;
-    public AudioClip paperClickClip;
-    public AudioClip hoverClip;
+	[Header("UI & Panels")]
+	[SerializeField] private GameObject settingsPanel;
+	[SerializeField] private Slider volumeSlider;
+	[SerializeField] private Slider sfxSlider;
 
-    private const string MIXER_MUSIC = "MusicVol";
-    private const string PREF_MUSIC = "MusicVolume";
+	[Header("Audio Settings")]
+	[SerializeField] private AudioMixer mainMixer;
+	[SerializeField] private AudioSource sfxSource;
+	[SerializeField] private AudioClip paperClickClip;
+	[SerializeField] private AudioClip hoverClip;
 
-    // НОВЫЕ КОНСТАНТЫ ДЛЯ SFX
-    private const string MIXER_SFX = "SFXVol";
-    private const string PREF_SFX = "SfxVolume";
+	private const string MIXER_MUSIC = "MusicVol";
+	private const string PREF_MUSIC = "MusicVolume";
 
-    void Start()
-    {
-        // Настройка ползунка музыки
-        float savedMusicVol = PlayerPrefs.GetFloat(PREF_MUSIC, 0.75f);
-        if (volumeSlider != null) volumeSlider.value = savedMusicVol;
-        SetVolume(savedMusicVol);
+	private const string MIXER_SFX = "SFXVol";
+	private const string PREF_SFX = "SfxVolume";
 
-        // Настройка ползунка SFX
-        float savedSfxVol = PlayerPrefs.GetFloat(PREF_SFX, 0.75f);
-        if (sfxSlider != null) sfxSlider.value = savedSfxVol;
-        SetSfxVolume(savedSfxVol);
-    }
+	private void Start()
+	{
+		if (settingsPanel != null)
+		{
+			settingsPanel.SetActive(false);
+		}
 
-    public void SetVolume(float sliderValue)
-    {
-        float dB = Mathf.Log10(Mathf.Clamp(sliderValue, 0.0001f, 1f)) * 20f;
-        if (mainMixer != null) mainMixer.SetFloat(MIXER_MUSIC, dB);
-        PlayerPrefs.SetFloat(PREF_MUSIC, sliderValue);
-    }
+		float savedMusicVol = PlayerPrefs.GetFloat(PREF_MUSIC, 0.75f);
 
-    // НОВЫЙ МЕТОД ДЛЯ SFX
-    public void SetSfxVolume(float sliderValue)
-    {
-        float dB = Mathf.Log10(Mathf.Clamp(sliderValue, 0.0001f, 1f)) * 20f;
-        if (mainMixer != null) mainMixer.SetFloat(MIXER_SFX, dB);
-        PlayerPrefs.SetFloat(PREF_SFX, sliderValue);
-    }
+		if (volumeSlider != null)
+		{
+			volumeSlider.value = savedMusicVol;
+		}
 
-    public void PlayClickSound()
-    {
-        if (sfxSource != null && paperClickClip != null)
-        {
-            sfxSource.PlayOneShot(paperClickClip);
-        }
-    }
+		SetVolume(savedMusicVol);
 
-    public void PlayHoverSound()
-    {
-        if (sfxSource != null && hoverClip != null)
-        {
-            sfxSource.PlayOneShot(hoverClip);
-        }
-    }
+		float savedSfxVol = PlayerPrefs.GetFloat(PREF_SFX, 0.75f);
 
-    public void ToggleSettings(bool isOpen)
-    {
-        PlayClickSound();
-        if (settingsPanel != null) settingsPanel.SetActive(isOpen);
-    }
+		if (sfxSlider != null)
+		{
+			sfxSlider.value = savedSfxVol;
+		}
 
-    public void LoadScene(string sceneName)
-    {
-        PlayClickSound();
-        SceneFadeTransition fadeTransition = FindFirstObjectByType<SceneFadeTransition>();
+		SetSfxVolume(savedSfxVol);
+	}
 
-        if (fadeTransition != null) fadeTransition.FadeToScene(sceneName);
-        else SceneManager.LoadScene(sceneName);
-    }
+	public void StartGame()
+	{
+		PlayClickSound();
 
-    public void QuitGame()
-    {
-        PlayClickSound();
-        Debug.Log("Выход из игры...");
-        Application.Quit();
-    }
+		if (string.IsNullOrEmpty(gameplaySceneName))
+		{
+			Debug.LogError("MainMenuController: Gameplay Scene Name не заполнен!");
+			return;
+		}
+
+		if (string.IsNullOrEmpty(loadingSceneName))
+		{
+			Debug.LogError("MainMenuController: Loading Scene Name не заполнен!");
+			return;
+		}
+
+		SceneLoadData.TargetSceneName = gameplaySceneName;
+		SceneManager.LoadScene(loadingSceneName);
+	}
+
+	public void LoadScene(string sceneName)
+	{
+		PlayClickSound();
+
+		if (string.IsNullOrEmpty(sceneName))
+		{
+			Debug.LogError("MainMenuController: sceneName пустой!");
+			return;
+		}
+
+		SceneLoadData.TargetSceneName = sceneName;
+		SceneManager.LoadScene(loadingSceneName);
+	}
+
+	public void ToggleSettings(bool isOpen)
+	{
+		PlayClickSound();
+
+		if (settingsPanel != null)
+		{
+			settingsPanel.SetActive(isOpen);
+		}
+		else
+		{
+			Debug.LogWarning("Settings Panel не назначена в инспекторе!");
+		}
+	}
+
+	public void SetVolume(float sliderValue)
+	{
+		float dB = Mathf.Log10(Mathf.Clamp(sliderValue, 0.0001f, 1f)) * 20f;
+
+		if (mainMixer != null)
+		{
+			mainMixer.SetFloat(MIXER_MUSIC, dB);
+		}
+
+		PlayerPrefs.SetFloat(PREF_MUSIC, sliderValue);
+	}
+
+	public void SetSfxVolume(float sliderValue)
+	{
+		float dB = Mathf.Log10(Mathf.Clamp(sliderValue, 0.0001f, 1f)) * 20f;
+
+		if (mainMixer != null)
+		{
+			mainMixer.SetFloat(MIXER_SFX, dB);
+		}
+
+		PlayerPrefs.SetFloat(PREF_SFX, sliderValue);
+	}
+
+	public void PlayClickSound()
+	{
+		if (sfxSource != null && paperClickClip != null)
+		{
+			sfxSource.PlayOneShot(paperClickClip);
+		}
+	}
+
+	public void PlayHoverSound()
+	{
+		if (sfxSource != null && hoverClip != null)
+		{
+			sfxSource.PlayOneShot(hoverClip);
+		}
+	}
+
+	public void ExitGame()
+	{
+		QuitGame();
+	}
+
+	public void QuitGame()
+	{
+		PlayClickSound();
+		Debug.Log("Выход из игры...");
+		Application.Quit();
+	}
 }
