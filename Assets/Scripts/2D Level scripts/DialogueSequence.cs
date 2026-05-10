@@ -1,5 +1,10 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class DialogueSequence : MonoBehaviour
 {
@@ -18,6 +23,14 @@ public class DialogueSequence : MonoBehaviour
 	[SerializeField] private string sceneToLoadOnComplete;
 	[SerializeField] private string loadingSceneName = "LoadingScreen";
 	[SerializeField] private bool useLoadingScreen = true;
+
+	[Header("Quit Game On Complete")]
+	[SerializeField] private bool quitGameOnComplete = false;
+
+	[Header("Quit Fade")]
+	[SerializeField] private bool useFadeBeforeQuit = true;
+	[SerializeField] private CanvasGroup quitFadeCanvasGroup;
+	[SerializeField] private float quitFadeDuration = 0.6f;
 
 	private bool alreadyPlayed = false;
 
@@ -55,10 +68,55 @@ public class DialogueSequence : MonoBehaviour
 			StoryFlags.SetFlag(storyFlagName);
 		}
 
+		if (quitGameOnComplete)
+		{
+			StartCoroutine(QuitGameRoutine());
+			return;
+		}
+
 		if (loadSceneOnComplete)
 		{
 			LoadNextScene();
 		}
+	}
+
+	private IEnumerator QuitGameRoutine()
+	{
+		if (useFadeBeforeQuit)
+		{
+			if (quitFadeCanvasGroup == null)
+			{
+				GameObject fadePanelObject = GameObject.Find("FadePanel");
+
+				if (fadePanelObject != null)
+				{
+					quitFadeCanvasGroup = fadePanelObject.GetComponent<CanvasGroup>();
+				}
+			}
+
+			if (quitFadeCanvasGroup != null)
+			{
+				quitFadeCanvasGroup.gameObject.SetActive(true);
+				quitFadeCanvasGroup.alpha = 0f;
+
+				float timer = 0f;
+
+				while (timer < quitFadeDuration)
+				{
+					timer += Time.deltaTime;
+					quitFadeCanvasGroup.alpha = Mathf.Clamp01(timer / quitFadeDuration);
+					yield return null;
+				}
+
+				quitFadeCanvasGroup.alpha = 1f;
+			}
+			else
+			{
+				Debug.LogWarning("DialogueSequence: FadePanel CanvasGroup не найден. Игра завершится без затемнения.", this);
+			}
+		}
+
+		QuitGame();
 	}
 
 	private void LoadNextScene()
@@ -78,6 +136,17 @@ public class DialogueSequence : MonoBehaviour
 		{
 			SceneManager.LoadScene(sceneToLoadOnComplete);
 		}
+	}
+
+	private void QuitGame()
+	{
+		Debug.Log("Игра завершена после диалога.");
+
+#if UNITY_EDITOR
+		EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
 	}
 
 	public void ResetDialogue()
