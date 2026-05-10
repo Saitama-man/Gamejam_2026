@@ -119,37 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &269643195
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 269643196}
-  m_Layer: 0
-  m_Name: 'Star Background '
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &269643196
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 269643195}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 20.93547, y: 4.52922, z: -3.64945}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1445316712}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &359667385
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,6 +246,81 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &418272453
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 418272454}
+  - component: {fileID: 418272456}
+  - component: {fileID: 418272455}
+  m_Layer: 5
+  m_Name: Zodiac Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &418272454
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418272453}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 721647290}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -745.88574, y: -490}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &418272455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418272453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.52156866}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 7caf9ab2d1883ce40b5d33b800bcf34f, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &418272456
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418272453}
+  m_CullTransparentMesh: 0
 --- !u!1 &618830787
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,7 +414,7 @@ GameObject:
   - component: {fileID: 721647288}
   - component: {fileID: 721647287}
   m_Layer: 5
-  m_Name: Canvas (1)
+  m_Name: HUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -446,20 +490,22 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 721647286}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1876933948}
   - {fileID: 618830788}
-  m_Father: {fileID: 0}
+  - {fileID: 1444149833}
+  - {fileID: 418272454}
+  m_Father: {fileID: 1144879268}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 960, y: 540}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &857809604
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,6 +517,7 @@ GameObject:
   - component: {fileID: 857809607}
   - component: {fileID: 857809606}
   - component: {fileID: 857809605}
+  - component: {fileID: 857809608}
   m_Layer: 0
   m_Name: Puzzle Manager
   m_TagString: Untagged
@@ -507,6 +554,13 @@ MonoBehaviour:
   solvedMapMarks: []
   globalSuccessPanel: {fileID: 0}
   globalFailPanel: {fileID: 0}
+  currentConstellationObject: {fileID: 0}
+  currentStageIndex: 0
+  completedCount: 0
+  totalScore: 0
+  currentTime: 0
+  levelEnded: 0
+  waitingForContinue: 0
 --- !u!114 &857809606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,15 +575,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraSpherePuzzleChecker
   constellationCenter: {fileID: 0}
   mainCamera: {fileID: 0}
-  correctViewPoint: {fileID: 0}
-  orbitCamera: {fileID: 0}
+  starProgressUI: {fileID: 0}
   levelManager: {fileID: 0}
-  requiredPercent: 80
-  angleForZeroProgress: 90
-  correctZoneAngle: 15
-  holdTimeToSolve: 1.2
-  progressText: {fileID: 0}
-  hintText: {fileID: 0}
 --- !u!4 &857809607
 Transform:
   m_ObjectHideFlags: 0
@@ -545,6 +592,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &857809608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857809604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c2a77f9dc4e4014bba15159d513722a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConstellationPuzzleMVP
+  constellationCenter: {fileID: 1804826576}
+  mainCamera: {fileID: 1070422847}
+  correctViewPoint: {fileID: 2034827495}
+  correctZoneAngle: 12
+  holdTimeToSolve: 1
+  orbitCameraScript: {fileID: 1442106388}
+  starPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  lineMaterial: {fileID: 2100000, guid: 4e6e48d32392c594b951cb984804a152, type: 2}
+  lineWidth: 0.04
+  zodiacImage: {fileID: 418272455}
+  showDebugLogs: 1
 --- !u!1 &1070422844
 GameObject:
   m_ObjectHideFlags: 0
@@ -632,7 +710,7 @@ Transform:
   m_GameObject: {fileID: 1070422844}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 8, z: -60}
+  m_LocalPosition: {x: 0, y: 8, z: -50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -802,7 +880,7 @@ GameObject:
   - component: {fileID: 1144879266}
   - component: {fileID: 1144879265}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Canvas_Level3D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -883,7 +961,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1444149833}
+  - {fileID: 721647290}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -917,15 +995,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 223605293140329024, guid: 00166fdb8307c87498af3bd156220395, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 223605293140329024, guid: 00166fdb8307c87498af3bd156220395, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 223605293140329024, guid: 00166fdb8307c87498af3bd156220395, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 223605293140329024, guid: 00166fdb8307c87498af3bd156220395, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1034,7 +1112,7 @@ Transform:
   m_Children:
   - {fileID: 1144496529}
   - {fileID: 1950027864}
-  m_Father: {fileID: 1144879268}
+  m_Father: {fileID: 721647290}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1445316711
 GameObject:
@@ -1066,7 +1144,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1804826576}
-  - {fileID: 269643196}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1804826575
@@ -1339,7 +1416,7 @@ Transform:
   m_GameObject: {fileID: 2034827494}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -41.4, y: 9.89, z: 17.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1354,4 +1431,3 @@ SceneRoots:
   - {fileID: 1445316712}
   - {fileID: 857809607}
   - {fileID: 1144879268}
-  - {fileID: 721647290}

@@ -1,105 +1,97 @@
 using UnityEngine;
-using TMPro;
 
 public class CameraSpherePuzzleChecker : MonoBehaviour
 {
-    [Header("Sphere Check")]
+    [Header("Scene")]
     [SerializeField] private Transform constellationCenter;
     [SerializeField] private Transform mainCamera;
-    [SerializeField] private Transform correctViewPoint;
-
-    [Header("Control")]
-    [SerializeField] private BlenderStyleOrbitCamera orbitCamera;
-    [SerializeField] private ConstellationLevelManager levelManager;
-
-    [Header("Progress")]
-    [SerializeField] private float requiredPercent = 80f;
-    [SerializeField] private float angleForZeroProgress = 90f;
-    [SerializeField] private float correctZoneAngle = 15f;
-
-    [Header("Hold")]
-    [SerializeField] private float holdTimeToSolve = 1.2f;
 
     [Header("UI")]
-    [SerializeField] private TMP_Text progressText;
-    [SerializeField] private TMP_Text hintText;
+    [SerializeField] private StarProgressUI starProgressUI;
+
+    [Header("Manager")]
+    [SerializeField] private Level3ConstellationManager levelManager;
+
+    private ConstellationLevelData currentLevel;
 
     private float holdTimer;
     private bool canCheck;
 
     private void Update()
     {
-        if (!canCheck)
+        if (!canCheck || currentLevel == null)
             return;
 
-        float progress = GetProgressPercent();
         float angle = GetCurrentAngle();
+        float progress01 = GetProgress01(angle);
 
-        if (progress >= requiredPercent && angle <= correctZoneAngle)
+        if (starProgressUI != null)
+            starProgressUI.SetProgress01(progress01);
+
+        if (angle <= currentLevel.correctZoneAngle)
         {
             holdTimer += Time.deltaTime;
 
-            if (hintText != null)
-                hintText.text = $"Удерживай положение: {holdTimer:0.0}/{holdTimeToSolve:0.0}";
-
-            if (holdTimer >= holdTimeToSolve)
+            if (holdTimer >= currentLevel.holdTimeToSolve)
             {
-                SolveCurrentConstellation();
+                SolveCurrentLevel();
             }
         }
         else
         {
             holdTimer = 0f;
-
-            if (hintText != null)
-                hintText.text = "Вращай телескоп, чтобы совместить созвездие";
         }
-
-        if (progressText != null)
-            progressText.text = $"Совпадение: {progress:0}%";
     }
 
-    public void StartChecking(Transform newCorrectViewPoint, float newCorrectZoneAngle)
+    public void StartChecking(ConstellationLevelData levelData)
     {
-        correctViewPoint = newCorrectViewPoint;
-        correctZoneAngle = newCorrectZoneAngle;
-
+        currentLevel = levelData;
         holdTimer = 0f;
         canCheck = true;
 
-        if (orbitCamera != null)
-            orbitCamera.SetCanControl(true);
+        if (starProgressUI != null)
+            starProgressUI.ResetProgress();
     }
 
     public void StopChecking()
     {
         canCheck = false;
-
-        if (orbitCamera != null)
-            orbitCamera.SetCanControl(false);
-    }
-
-    private void SolveCurrentConstellation()
-    {
-        StopChecking();
-
-        if (levelManager != null)
-            levelManager.OnCurrentConstellationSolved();
+        holdTimer = 0f;
     }
 
     private float GetCurrentAngle()
     {
-        Vector3 currentDirection = (mainCamera.position - constellationCenter.position).normalized;
-        Vector3 correctDirection = (correctViewPoint.position - constellationCenter.position).normalized;
+        if (currentLevel == null || currentLevel.correctViewPoint == null)
+            return 180f;
+
+        Vector3 currentDirection =
+            (mainCamera.position - constellationCenter.position).normalized;
+
+        Vector3 correctDirection =
+            (currentLevel.correctViewPoint.position - constellationCenter.position).normalized;
 
         return Vector3.Angle(currentDirection, correctDirection);
     }
 
-    public float GetProgressPercent()
+    private float GetProgress01(float angle)
     {
-        float angle = GetCurrentAngle();
+        float emptyAngle = Mathf.Max(1f, currentLevel.angleForEmptyStar);
 
-        float percent = 100f - angle / angleForZeroProgress * 100f;
-        return Mathf.Clamp(percent, 0f, 100f);
+        float progress = 1f - angle / emptyAngle;
+        return Mathf.Clamp01(progress);
+    }
+
+    private void SolveCurrentLevel()
+    {
+        canCheck = false;
+        holdTimer = 0f;
+
+        if (starProgressUI != null)
+            starProgressUI.SetProgress01(1f);
+
+        Debug.Log($"Созвездие решено: {currentLevel.constellationName}");
+
+        if (levelManager != null)
+            levelManager.OnCurrentLevelSolved();
     }
 }
