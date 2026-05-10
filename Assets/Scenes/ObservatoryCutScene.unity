@@ -445,11 +445,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TwoImageCutscene
   leftImageGroup: {fileID: 63367434}
   rightImageGroup: {fileID: 509611920}
-  startDelay: 0.3
-  fadeInDuration: 0.5
-  holdDuration: 2
-  fadeOutDuration: 0.5
-  pauseBetweenImages: 0.5
+  startDelay: 0.5
+  firstFadeInDuration: 0.65
+  delayBeforeSecondImage: 1
+  secondFadeInDuration: 0.65
+  holdAfterBothImages: 2
+  fadeOutBothImagesAtEnd: 1
+  endFadeOutDuration: 0.5
   setStoryFlagOnComplete: 1
   storyFlagName: ObservatoryCutscenePlayed
   nextSceneName: DarkObservatory
