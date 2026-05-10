@@ -695,6 +695,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1312963711}
   - component: {fileID: 1312963712}
+  - component: {fileID: 1312963713}
   m_Layer: 0
   m_Name: Background
   m_TagString: Untagged
@@ -776,6 +777,21 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1312963713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312963710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 155685f59038c2549b39238b8010d7d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ParallaxLayer
+  cameraTransform: {fileID: 1715116718}
+  parallaxFactorX: 0.05
+  parallaxFactorY: 0
 --- !u!1 &1321227466
 GameObject:
   m_ObjectHideFlags: 0
@@ -1362,13 +1378,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6910148577328128141, guid: 0f031b50c8db9da4e9d365e0e72e7035, type: 3}
-      propertyPath: m_SortingLayer
-      value: 3
+    - target: {fileID: 3874861052539452904, guid: 0f031b50c8db9da4e9d365e0e72e7035, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 6910148577328128141, guid: 0f031b50c8db9da4e9d365e0e72e7035, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1797625583
+    - target: {fileID: 3874861052539452904, guid: 0f031b50c8db9da4e9d365e0e72e7035, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3874861052539452904, guid: 0f031b50c8db9da4e9d365e0e72e7035, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7176476512287938098, guid: 0f031b50c8db9da4e9d365e0e72e7035, type: 3}
       propertyPath: m_Name
