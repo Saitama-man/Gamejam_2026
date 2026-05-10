@@ -11,6 +11,10 @@ public class PuzzleGameManager : MonoBehaviour
         public string constellationName;
         public GameObject constellationPrefab;
         public Sprite zodiacSprite;
+
+        [TextArea(3, 8)]
+        public string constellationDescription;
+
         public ConstellationPuzzleMVP.StarLine[] starLines;
     }
 
@@ -40,6 +44,7 @@ public class PuzzleGameManager : MonoBehaviour
     [Header("Level Transition")]
     [SerializeField] private float levelTransitionDelay = 1.5f;
     [SerializeField] private PuzzleScreenFader screenFader;
+    [SerializeField] private bool openMapAfterEachSolvedLevel = true;
 
     [Header("Timer Result Rules")]
     [SerializeField] private int minimumConstellationsForSuccess = 3;
@@ -404,30 +409,42 @@ public class PuzzleGameManager : MonoBehaviour
         if (gameFinished)
             return;
 
+        ConstellationLevel completedLevel = levels[currentLevelIndex];
+
         completedConstellations++;
 
         if (mapUI != null)
-            mapUI.SetConstellationCompleted(currentLevelIndex, constellationSprite);
+        {
+            mapUI.SetConstellationCompleted(
+                currentLevelIndex,
+                completedLevel.constellationName,
+                completedLevel.constellationDescription
+            );
+        }
 
         currentLevelIndex++;
+
+        if (nextLevelCoroutine != null)
+            StopCoroutine(nextLevelCoroutine);
+
+        nextLevelCoroutine = StartCoroutine(AfterSolvedLevelFlow());
+    }
+
+    private IEnumerator AfterSolvedLevelFlow()
+    {
+        if (openMapAfterEachSolvedLevel && mapUI != null)
+        {
+            mapUI.OpenMap();
+
+            while (mapUI.IsOpen)
+                yield return null;
+        }
 
         if (currentLevelIndex >= levels.Length)
         {
             FinishWithSuccess();
+            yield break;
         }
-        else
-        {
-            if (nextLevelCoroutine != null)
-                StopCoroutine(nextLevelCoroutine);
-
-            nextLevelCoroutine = StartCoroutine(LoadNextAfterDelay());
-        }
-    }
-
-    private IEnumerator LoadNextAfterDelay()
-    {
-        if (timer != null)
-            timer.PauseTimer();
 
         float safeDelay = Mathf.Max(0f, levelTransitionDelay);
 
@@ -441,9 +458,6 @@ public class PuzzleGameManager : MonoBehaviour
 
         if (screenFader != null)
             yield return screenFader.FadeIn();
-
-        if (timer != null && !gameFinished)
-            timer.ResumeTimer();
     }
 
     private void PauseTimer()
