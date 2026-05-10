@@ -1044,6 +1044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Doorlogic
   sceneToLoad: Observatory2
+  loadingSceneName: LoadingScreen
   requireButtonPress: 0
   interactKey: 101
 --- !u!1 &2086645385
