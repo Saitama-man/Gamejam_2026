@@ -2,46 +2,59 @@ using UnityEngine;
 
 public class DialogueInteraction : MonoBehaviour
 {
-    [Header("Target Dialogue")]
-    public DialogueSequence dialogueSequence;
+	[Header("Target Dialogue")]
+	[SerializeField] private DialogueSequence dialogueSequence;
 
-    [Header("Interaction")]
-    public KeyCode interactKey = KeyCode.E;
+	[Header("Interaction")]
+	[SerializeField] private KeyCode interactKey = KeyCode.E;
+	[SerializeField] private string interactionHint = "E — поговорить";
 
-    private bool playerInside = false;
+	private bool playerInside = false;
 
-    private void Update()
-    {
-        if (!playerInside)
-            return;
+	private void Update()
+	{
+		if (!playerInside)
+			return;
 
-        if (Input.GetKeyDown(interactKey))
-        {
-            if (dialogueSequence == null)
-            {
-                Debug.LogError("DialogueInteraction: не назначен DialogueSequence.", this);
-                return;
-            }
+		if (Input.GetKeyDown(interactKey))
+		{
+			if (dialogueSequence == null)
+			{
+				Debug.LogError("DialogueInteraction: не назначен DialogueSequence.", this);
+				return;
+			}
 
-            dialogueSequence.Play();
-        }
-    }
+			if (!dialogueSequence.CanPlay())
+			{
+				InteractionHintManager.Instance?.Hide();
+				return;
+			}
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!other.CompareTag("Player"))
-            return;
+			InteractionHintManager.Instance?.Hide();
+			dialogueSequence.Play();
+		}
+	}
 
-        playerInside = true;
+	private void OnTriggerEnter2D(Collider2D other)
+	{
+		if (!other.CompareTag("Player"))
+			return;
 
-        Debug.Log("Игрок рядом. Нажми E для диалога.");
-    }
+		playerInside = true;
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (!other.CompareTag("Player"))
-            return;
+		if (dialogueSequence != null && dialogueSequence.CanPlay())
+		{
+			InteractionHintManager.Instance?.Show(interactionHint);
+		}
+	}
 
-        playerInside = false;
-    }
+	private void OnTriggerExit2D(Collider2D other)
+	{
+		if (!other.CompareTag("Player"))
+			return;
+
+		playerInside = false;
+
+		InteractionHintManager.Instance?.Hide();
+	}
 }
