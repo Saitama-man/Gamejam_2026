@@ -23,6 +23,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LevelRealNight.unity
     guid: a4b806ba36f043643b3611e4a4e43f99
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: eae59e15db51bfc48b47ad9528931b7e
+  - enabled: 1
+    path: Assets/Scenes/NightCutScene.unity
+    guid: c6a106d52be1fe741b3bbdb9684cfdcb
+  - enabled: 1
+    path: Assets/Scenes/DarkObservatory.unity
+    guid: e99910eadbd7a7e429253f5d60e11df2
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

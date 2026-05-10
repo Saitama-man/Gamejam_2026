@@ -3,43 +3,57 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
-    [Header("Настройки сцен")]
-    [Tooltip("Название геймплейной сцены в Build Settings")]
-    [SerializeField] private string gameplaySceneName = "Level1_2D"; // Обновил под твою текущую цель
+	[Header("Настройки сцен")]
+	[Tooltip("Название первой игровой сцены")]
+	[SerializeField] private string gameplaySceneName = "LevelRealNight";
 
-    [Header("UI Панели")]
-    [SerializeField] private GameObject settingsPanel;
+	[Tooltip("Название сцены загрузки")]
+	[SerializeField] private string loadingSceneName = "LoadingScreen";
 
-    private void Start()
-    {
-        // При старте убеждаемся, что настройки скрыты
-        if (settingsPanel != null)
-            settingsPanel.SetActive(false);
-    }
+	[Header("UI Панели")]
+	[SerializeField] private GameObject settingsPanel;
 
-    // Метод для кнопки Start
-    public void StartGame()
-    {
-        SceneManager.LoadScene(gameplaySceneName);
-    }
+	private void Start()
+	{
+		if (settingsPanel != null)
+		{
+			settingsPanel.SetActive(false);
+		}
+	}
 
-    // Метод для кнопки Settings (открыть/закрыть)
-    public void ToggleSettings(bool isOpen)
-    {
-        if (settingsPanel != null)
-        {
-            settingsPanel.SetActive(isOpen);
-        }
-        else
-        {
-            Debug.LogWarning("Settings Panel не назначена в инспекторе!");
-        }
-    }
+	public void StartGame()
+	{
+		if (string.IsNullOrEmpty(gameplaySceneName))
+		{
+			Debug.LogError("MainMenuController: Gameplay Scene Name не заполнен!");
+			return;
+		}
 
-    // Метод для кнопки Exit
-    public void ExitGame()
-    {
-        Debug.Log("Выход из игры...");
-        Application.Quit();
-    }
+		if (string.IsNullOrEmpty(loadingSceneName))
+		{
+			Debug.LogError("MainMenuController: Loading Scene Name не заполнен!");
+			return;
+		}
+
+		SceneLoadData.TargetSceneName = gameplaySceneName;
+		SceneManager.LoadScene(loadingSceneName);
+	}
+
+	public void ToggleSettings(bool isOpen)
+	{
+		if (settingsPanel != null)
+		{
+			settingsPanel.SetActive(isOpen);
+		}
+		else
+		{
+			Debug.LogWarning("Settings Panel не назначена в инспекторе!");
+		}
+	}
+
+	public void ExitGame()
+	{
+		Debug.Log("Выход из игры...");
+		Application.Quit();
+	}
 }

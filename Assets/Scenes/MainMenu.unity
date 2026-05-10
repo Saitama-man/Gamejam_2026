@@ -1691,7 +1691,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b674106a92c45f4b9059a02be87db5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
-  gameplaySceneName: Level1_2D
+  gameplaySceneName: LevelRealDay
+  loadingSceneName: LoadingScreen
   settingsPanel: {fileID: 1914318145}
 --- !u!4 &2066881592
 Transform:

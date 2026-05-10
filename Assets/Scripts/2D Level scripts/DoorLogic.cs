@@ -3,82 +3,108 @@ using UnityEngine.SceneManagement;
 
 public class DoorLogic : MonoBehaviour
 {
-    [Header("Scene")]
-    [SerializeField] private string sceneToLoad;
-    [SerializeField] private string loadingSceneName = "LoadingScreen";
+	[Header("Scene")]
+	[SerializeField] private string sceneToLoad;
+	[SerializeField] private string loadingSceneName = "LoadingScreen";
 
-    [Header("Interaction")]
-    [SerializeField] private bool requireButtonPress = false;
-    [SerializeField] private KeyCode interactKey = KeyCode.E;
+	[Header("Interaction")]
+	[SerializeField] private bool requireButtonPress = false;
+	[SerializeField] private KeyCode interactKey = KeyCode.E;
 
-    private bool playerInside = false;
-    private bool alreadyTriggered = false;
+	[Header("Story Requirement")]
+	[SerializeField] private bool requireStoryFlag = false;
+	[SerializeField] private string requiredStoryFlagName;
+	[SerializeField] private DialogueSequence blockedDialogue;
 
-    private void Update()
-    {
-        if (requireButtonPress && playerInside && Input.GetKeyDown(interactKey))
-        {
-            TryLoadScene();
-        }
-    }
+	private bool playerInside = false;
+	private bool alreadyTriggered = false;
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!other.CompareTag("Player"))
-            return;
+	private void Update()
+	{
+		if (requireButtonPress && playerInside && Input.GetKeyDown(interactKey))
+		{
+			TryLoadScene();
+		}
+	}
 
-        playerInside = true;
+	private void OnTriggerEnter2D(Collider2D other)
+	{
+		if (!other.CompareTag("Player"))
+			return;
 
-        if (!requireButtonPress)
-        {
-            TryLoadScene();
-        }
-        else
-        {
-            Debug.Log("Нажми E, чтобы перейти.");
-        }
-    }
+		playerInside = true;
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (!other.CompareTag("Player"))
-            return;
+		if (!requireButtonPress)
+		{
+			TryLoadScene();
+		}
+		else
+		{
+			Debug.Log("Нажми E, чтобы перейти.");
+		}
+	}
 
-        playerInside = false;
-    }
+	private void OnTriggerExit2D(Collider2D other)
+	{
+		if (!other.CompareTag("Player"))
+			return;
 
-    private void TryLoadScene()
-    {
-        if (alreadyTriggered)
-            return;
+		playerInside = false;
+	}
 
-        alreadyTriggered = true;
+	private void TryLoadScene()
+	{
+		if (alreadyTriggered)
+			return;
 
-        if (string.IsNullOrEmpty(sceneToLoad))
-        {
-            Debug.LogError("DoorLogic: Scene To Load не заполнена!", this);
-            alreadyTriggered = false;
-            return;
-        }
+		if (requireStoryFlag && !StoryFlags.HasFlag(requiredStoryFlagName))
+		{
+			if (blockedDialogue != null)
+			{
+				blockedDialogue.Play();
+			}
+			else
+			{
+				Debug.Log("Дверь закрыта: не выполнено условие " + requiredStoryFlagName);
+			}
 
-        PlayerMovement playerMovement = FindFirstObjectByType<PlayerMovement>();
+			return;
+		}
 
-        if (playerMovement != null)
-        {
-            playerMovement.SetMovementEnabled(false);
-        }
+		alreadyTriggered = true;
 
-        SceneLoadData.TargetSceneName = sceneToLoad;
+		if (string.IsNullOrEmpty(sceneToLoad))
+		{
+			Debug.LogError("DoorLogic: Scene To Load не заполнена!", this);
+			alreadyTriggered = false;
+			return;
+		}
 
-        SceneFadeTransition fadeTransition = FindFirstObjectByType<SceneFadeTransition>();
+		if (string.IsNullOrEmpty(loadingSceneName))
+		{
+			Debug.LogError("DoorLogic: Loading Scene Name не заполнена!", this);
+			alreadyTriggered = false;
+			return;
+		}
 
-        if (fadeTransition != null)
-        {
-            fadeTransition.FadeToScene(loadingSceneName);
-        }
-        else
-        {
-            SceneManager.LoadScene(loadingSceneName);
-        }
-    }
+		PlayerMovement playerMovement = FindFirstObjectByType<PlayerMovement>();
+
+		if (playerMovement != null)
+		{
+			playerMovement.SetMovementEnabled(false);
+		}
+
+		SceneLoadData.TargetSceneName = sceneToLoad;
+
+		SceneFadeTransition fadeTransition = FindFirstObjectByType<SceneFadeTransition>();
+
+		if (fadeTransition != null)
+		{
+			fadeTransition.FadeToScene(loadingSceneName);
+		}
+		else
+		{
+			SceneManager.LoadScene(loadingSceneName);
+		}
+	}
 }
