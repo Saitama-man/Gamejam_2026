@@ -28,6 +28,12 @@ public class PuzzleGameManager : MonoBehaviour
     [SerializeField] private Transform constellationCenter;
     [SerializeField] private Transform sharedCorrectViewPoint;
 
+    [Header("Constellation Spawn")]
+    [SerializeField] private bool centerConstellationByStars = true;
+    [SerializeField] private bool resetPrefabRotationOnSpawn = true;
+    [SerializeField] private bool resetPrefabScaleOnSpawn = true;
+    [SerializeField] private bool clearHolderBeforeSpawn = true;
+
     [Header("Camera Random Start")]
     [SerializeField] private float minStartAngleFromCorrectPoint = 50f;
 
@@ -38,12 +44,19 @@ public class PuzzleGameManager : MonoBehaviour
     [Header("Flow")]
     [SerializeField] private float delayBeforeNextConstellation = 1.5f;
 
+    private const string ConstellationCenterName = "Constellation Center";
+    private const string CorrectViewPointName = "CorrectViewPoint";
+    private const string HolderName = "CurrentConstellationHolder";
+
     private int currentLevelIndex;
     private GameObject currentConstellation;
     private bool gameFinished;
+    private Coroutine nextLevelCoroutine;
 
     private void Start()
     {
+        ResolveSceneReferences();
+
         if (puzzle != null)
             puzzle.OnPuzzleSolved += OnPuzzleSolved;
 
@@ -58,6 +71,9 @@ public class PuzzleGameManager : MonoBehaviour
         }
 
         currentLevelIndex = 0;
+
+        if (clearHolderBeforeSpawn)
+            ClearConstellationHolder();
 
         if (timer != null)
             timer.StartTimer();
@@ -85,23 +101,16 @@ public class PuzzleGameManager : MonoBehaviour
         if (gameFinished)
             return;
 
+        ResolveSceneReferences();
+
         if (currentLevelIndex >= levels.Length)
         {
             WinGame();
             return;
         }
 
-        if (sharedCorrectViewPoint == null)
-        {
-            Debug.LogError("Shared Correct View Point не назначен в PuzzleGameManager.");
+        if (!ValidateReferences())
             return;
-        }
-
-        if (constellationHolder == null)
-        {
-            Debug.LogError("Constellation Holder не назначен в PuzzleGameManager.");
-            return;
-        }
 
         ConstellationLevel level = levels[currentLevelIndex];
 
@@ -111,17 +120,28 @@ public class PuzzleGameManager : MonoBehaviour
             return;
         }
 
-        if (currentConstellation != null)
-            Destroy(currentConstellation);
+        if (clearHolderBeforeSpawn)
+            ClearConstellationHolder();
+        else
+            DestroyCurrentConstellation();
 
-        currentConstellation = Instantiate(
-            level.constellationPrefab,
-            constellationHolder.position,
-            constellationHolder.rotation,
-            constellationHolder
-        );
+        currentConstellation = Instantiate(level.constellationPrefab, constellationHolder);
+
+        if (!string.IsNullOrEmpty(level.constellationName))
+            currentConstellation.name = level.constellationName;
+
+        currentConstellation.transform.localPosition = Vector3.zero;
+
+        if (resetPrefabRotationOnSpawn)
+            currentConstellation.transform.localRotation = Quaternion.identity;
+
+        if (resetPrefabScaleOnSpawn)
+            currentConstellation.transform.localScale = Vector3.one;
 
         Transform[] stars = CollectStars(currentConstellation.transform);
+
+        if (centerConstellationByStars)
+            CenterConstellationByStars(stars);
 
         if (puzzle != null)
         {
@@ -132,10 +152,6 @@ public class PuzzleGameManager : MonoBehaviour
                 sharedCorrectViewPoint,
                 level.zodiacSprite
             );
-        }
-        else
-        {
-            Debug.LogError("Puzzle не назначен в PuzzleGameManager.");
         }
 
         if (orbitCamera != null)
@@ -148,10 +164,141 @@ public class PuzzleGameManager : MonoBehaviour
                 minStartAngleFromCorrectPoint
             );
         }
-        else
+    }
+
+    private void ResolveSceneReferences()
+    {
+        if (constellationCenter == null)
         {
-            Debug.LogWarning("Orbit Camera не назначена в PuzzleGameManager.");
+            GameObject centerObject = GameObject.Find(ConstellationCenterName);
+
+            if (centerObject != null)
+                constellationCenter = centerObject.transform;
         }
+
+        if (sharedCorrectViewPoint == null)
+        {
+            GameObject correctObject = GameObject.Find(CorrectViewPointName);
+
+            if (correctObject != null)
+                sharedCorrectViewPoint = correctObject.transform;
+        }
+
+        bool holderIsWrong =
+            constellationHolder == null ||
+            constellationHolder == sharedCorrectViewPoint ||
+            constellationHolder == constellationCenter ||
+            constellationHolder.name == CorrectViewPointName ||
+            constellationHolder.name.Contains("CorrectViewPoint");
+
+        if (holderIsWrong)
+        {
+            Transform foundHolder = null;
+
+            if (constellationCenter != null)
+                foundHolder = constellationCenter.Find(HolderName);
+
+            if (foundHolder == null)
+            {
+                GameObject holderObject = GameObject.Find(HolderName);
+
+                if (holderObject != null)
+                    foundHolder = holderObject.transform;
+            }
+
+            if (foundHolder != null)
+            {
+                constellationHolder = foundHolder;
+                Debug.Log($"Constellation Holder автоматически назначен: {constellationHolder.name}");
+            }
+        }
+
+        if (constellationHolder == null && constellationCenter != null)
+        {
+            GameObject newHolder = new GameObject(HolderName);
+            newHolder.transform.SetParent(constellationCenter);
+            newHolder.transform.localPosition = Vector3.zero;
+            newHolder.transform.localRotation = Quaternion.identity;
+            newHolder.transform.localScale = Vector3.one;
+
+            constellationHolder = newHolder.transform;
+
+            Debug.LogWarning("CurrentConstellationHolder не найден, поэтому был создан автоматически.");
+        }
+    }
+
+    private bool ValidateReferences()
+    {
+        if (levels == null || levels.Length == 0)
+        {
+            Debug.LogError("Levels пустой. Добавь созвездия в PuzzleGameManager.");
+            return false;
+        }
+
+        if (constellationCenter == null)
+        {
+            Debug.LogError("Constellation Center не назначен.");
+            return false;
+        }
+
+        if (sharedCorrectViewPoint == null)
+        {
+            Debug.LogError("Shared Correct View Point не назначен.");
+            return false;
+        }
+
+        if (constellationHolder == null)
+        {
+            Debug.LogError("Constellation Holder не назначен.");
+            return false;
+        }
+
+        if (constellationHolder == sharedCorrectViewPoint)
+        {
+            Debug.LogError("Constellation Holder всё ещё равен CorrectViewPoint. Назначь CurrentConstellationHolder.");
+            return false;
+        }
+
+        if (constellationHolder == constellationCenter)
+        {
+            Debug.LogError("Constellation Holder не должен быть Constellation Center. Назначь CurrentConstellationHolder.");
+            return false;
+        }
+
+        if (puzzle == null)
+        {
+            Debug.LogError("Puzzle не назначен.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void DestroyCurrentConstellation()
+    {
+        if (currentConstellation != null)
+        {
+            Destroy(currentConstellation);
+            currentConstellation = null;
+        }
+    }
+
+    private void ClearConstellationHolder()
+    {
+        if (constellationHolder == null)
+            return;
+
+        for (int i = constellationHolder.childCount - 1; i >= 0; i--)
+        {
+            Transform child = constellationHolder.GetChild(i);
+
+            if (Application.isPlaying)
+                Destroy(child.gameObject);
+            else
+                DestroyImmediate(child.gameObject);
+        }
+
+        currentConstellation = null;
     }
 
     private Transform[] CollectStars(Transform root)
@@ -163,12 +310,8 @@ public class PuzzleGameManager : MonoBehaviour
             if (child == root)
                 continue;
 
-            if (child.name.StartsWith("Star") ||
-                child.CompareTag("Star") ||
-                IsNumericName(child.name))
-            {
+            if (IsStarTransform(child))
                 result.Add(child);
-            }
         }
 
         result.Sort((a, b) =>
@@ -176,25 +319,86 @@ public class PuzzleGameManager : MonoBehaviour
             int aNumber;
             int bNumber;
 
-            bool aIsNumber = int.TryParse(a.name, out aNumber);
-            bool bIsNumber = int.TryParse(b.name, out bNumber);
+            bool aHasNumber = TryExtractNumber(a.name, out aNumber);
+            bool bHasNumber = TryExtractNumber(b.name, out bNumber);
 
-            if (aIsNumber && bIsNumber)
+            if (aHasNumber && bHasNumber)
                 return aNumber.CompareTo(bNumber);
 
             return a.GetSiblingIndex().CompareTo(b.GetSiblingIndex());
         });
 
         if (result.Count == 0)
-            Debug.LogWarning($"В префабе {root.name} не найдены звёзды. Назови их Star0, Star1... или 0, 1, 2...");
+        {
+            Debug.LogWarning(
+                $"В префабе {root.name} не найдены звёзды. " +
+                "Назови дочерние объекты Star, Star0, Star1... или 0, 1, 2..."
+            );
+        }
 
         return result.ToArray();
+    }
+
+    private bool IsStarTransform(Transform target)
+    {
+        string objectName = target.name.Trim();
+
+        if (objectName == "Star")
+            return true;
+
+        if (objectName.StartsWith("Star"))
+            return true;
+
+        if (IsNumericName(objectName))
+            return true;
+
+        return false;
+    }
+
+    private void CenterConstellationByStars(Transform[] stars)
+    {
+        if (stars == null || stars.Length == 0 || currentConstellation == null)
+            return;
+
+        Bounds bounds = new Bounds(stars[0].position, Vector3.zero);
+
+        for (int i = 1; i < stars.Length; i++)
+        {
+            if (stars[i] != null)
+                bounds.Encapsulate(stars[i].position);
+        }
+
+        Vector3 starsCenter = bounds.center;
+        Vector3 targetCenter = constellationCenter.position;
+        Vector3 offset = targetCenter - starsCenter;
+
+        currentConstellation.transform.position += offset;
     }
 
     private bool IsNumericName(string objectName)
     {
         int number;
         return int.TryParse(objectName, out number);
+    }
+
+    private bool TryExtractNumber(string objectName, out int number)
+    {
+        if (int.TryParse(objectName, out number))
+            return true;
+
+        string digits = "";
+
+        for (int i = 0; i < objectName.Length; i++)
+        {
+            if (char.IsDigit(objectName[i]))
+                digits += objectName[i];
+        }
+
+        if (!string.IsNullOrEmpty(digits))
+            return int.TryParse(digits, out number);
+
+        number = 0;
+        return false;
     }
 
     private void OnPuzzleSolved(string constellationName, Sprite constellationSprite)
@@ -213,7 +417,10 @@ public class PuzzleGameManager : MonoBehaviour
         }
         else
         {
-            StartCoroutine(LoadNextAfterDelay());
+            if (nextLevelCoroutine != null)
+                StopCoroutine(nextLevelCoroutine);
+
+            nextLevelCoroutine = StartCoroutine(LoadNextAfterDelay());
         }
     }
 
@@ -242,6 +449,9 @@ public class PuzzleGameManager : MonoBehaviour
 
         gameFinished = true;
 
+        if (nextLevelCoroutine != null)
+            StopCoroutine(nextLevelCoroutine);
+
         if (timer != null)
             timer.StopTimer();
 
@@ -257,6 +467,9 @@ public class PuzzleGameManager : MonoBehaviour
             return;
 
         gameFinished = true;
+
+        if (nextLevelCoroutine != null)
+            StopCoroutine(nextLevelCoroutine);
 
         if (timer != null)
             timer.StopTimer();
