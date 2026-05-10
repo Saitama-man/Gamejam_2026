@@ -568,7 +568,7 @@ MonoBehaviour:
   imageTransform: {fileID: 76029810}
   startPosition: {x: 400, y: 0}
   endPosition: {x: -400, y: 0}
-  panDuration: 6
+  panDuration: 4
   fadeOverlayCanvasGroup: {fileID: 341860018}
   startFadeDuration: 0.4
   endFadeDuration: 0.4

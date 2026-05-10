@@ -32,6 +32,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DarkObservatory.unity
     guid: e99910eadbd7a7e429253f5d60e11df2
+  - enabled: 1
+    path: Assets/Scenes/ObservatoryCutScene.unity
+    guid: 305886d694fe59b4aa95bade67fa4714
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

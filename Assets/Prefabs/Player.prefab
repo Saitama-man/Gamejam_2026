@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   canMove: 1
-  moveSpeed: 5
+  moveSpeed: 1.6
   jumpForce: 8
   groundCheck: {fileID: 1939248504847308676}
   groundCheckRadius: 0.15
@@ -236,12 +236,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SimpleWalkAnimation
   spriteRenderer: {fileID: 7039948236028464374}
   playerMovement: {fileID: 2580751380386003132}
-  walkFrames:
+  walkFramesWithCandle:
   - {fileID: 21300000, guid: 393f0e9a500cbaf408a261a7e1624ea5, type: 3}
   - {fileID: 21300000, guid: 8db355e4379c53145911ace6f20bc9ed, type: 3}
   - {fileID: 21300000, guid: 01e8a7563989eea48a8b047ac8915eab, type: 3}
   - {fileID: 21300000, guid: ea2e639835c4aef4c8840e0ca5ffae53, type: 3}
-  framesPerSecond: 8
+  walkFramesWithoutCandle:
+  - {fileID: 21300000, guid: 90d470f906e271942b39c15411891641, type: 3}
+  - {fileID: 21300000, guid: 4caad77253bccff42908e34842e39442, type: 3}
+  - {fileID: 21300000, guid: 4b9d0cae717d68f44b535739bf11349e, type: 3}
+  - {fileID: 21300000, guid: 2d8117734e5b9ce45ae4c962654b2ca4, type: 3}
+  framesPerSecond: 4
+  startsWithCandle: 0
   artFacesRight: 1
 --- !u!70 &-6165092672023273616
 CapsuleCollider2D:

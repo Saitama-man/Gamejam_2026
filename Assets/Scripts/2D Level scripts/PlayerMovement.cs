@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
     public bool canMove = true;
 
     [Header("Movement")]
-    public float moveSpeed = 5f;
+    public float moveSpeed = 0.5f;
     public float jumpForce = 8f;
 
     [Header("Ground Check")]
