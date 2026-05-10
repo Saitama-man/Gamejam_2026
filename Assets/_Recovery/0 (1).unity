@@ -1911,8 +1911,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1691602913}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.49995, y: 0}
-  m_AnchorMax: {x: 0.49995, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1986,8 +1986,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1468373342}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.49995, y: 0}
-  m_AnchorMax: {x: 0.49995, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2062,7 +2062,7 @@ RectTransform:
   m_Father: {fileID: 667970034}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.49995, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2647,7 +2647,7 @@ RectTransform:
   m_Father: {fileID: 1479509387}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.49995, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2944,7 +2944,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1914318146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3116,12 +3116,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
   settingsPanel: {fileID: 1914318145}
-  volumeSlider: {fileID: 304954728}
-  sfxSlider: {fileID: 1585527288}
+  volumeSlider: {fileID: 0}
+  sfxSlider: {fileID: 0}
   mainMixer: {fileID: 24100000, guid: 196e4844d4fdee945ae0b9342a385cd0, type: 2}
-  sfxSource: {fileID: 465997199}
-  paperClickClip: {fileID: 8300000, guid: e462da968c6f3124aa1d8d88b2af2091, type: 3}
-  hoverClip: {fileID: 8300000, guid: 8db601a0c2658794697d230c07e2fa46, type: 3}
+  sfxSource: {fileID: 0}
+  paperClickClip: {fileID: 0}
+  hoverClip: {fileID: 0}
 --- !u!4 &2066881592
 Transform:
   m_ObjectHideFlags: 0
