@@ -1,98 +1,51 @@
 using UnityEngine;
 
-[DefaultExecutionOrder(30000)]
-[RequireComponent(typeof(SpriteRenderer))]
 public class SimpleWalkAnimation : MonoBehaviour
 {
-    [Header("Frames")]
+    [Header("Sprite Renderer")]
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
+    [Header("Walk Frames")]
     [SerializeField] private Sprite[] walkFrames;
 
-    [Header("Animation")]
+    [Header("Settings")]
     [SerializeField] private float framesPerSecond = 8f;
 
     [Header("Flip")]
-    [SerializeField] private bool invertFlip = false;
-    [SerializeField] private float moveThreshold = 0.05f;
+    [SerializeField] private bool artFacesRight = true;
 
-    [Header("References")]
-    [SerializeField] private Rigidbody2D playerRigidbody;
-
-    [Header("Debug")]
-    [SerializeField] private float debugHorizontal;
-    [SerializeField] private bool debugFacingLeft;
-
-    private SpriteRenderer spriteRenderer;
-
-    private float timer;
     private int currentFrame;
+    private float timer;
 
-    private bool facingLeft;
+    private Vector3 startScale;
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
 
-        if (playerRigidbody == null)
-            playerRigidbody = GetComponentInParent<Rigidbody2D>();
-
-        if (walkFrames != null && walkFrames.Length > 0)
-            spriteRenderer.sprite = walkFrames[0];
+        startScale = transform.localScale;
     }
 
     private void Update()
     {
-        float horizontal = GetHorizontalDirection();
+        float moveX = Input.GetAxisRaw("Horizontal");
 
-        debugHorizontal = horizontal;
-
-        if (horizontal < -moveThreshold)
-            facingLeft = true;
-        else if (horizontal > moveThreshold)
-            facingLeft = false;
-
-        debugFacingLeft = facingLeft;
-
-        ApplyFlip();
-        Animate(Mathf.Abs(horizontal) > moveThreshold);
+        HandleFlip(moveX);
+        HandleWalkAnimation(moveX);
     }
 
-    private float GetHorizontalDirection()
-    {
-        float horizontal = 0f;
-
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            horizontal = -1f;
-        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-            horizontal = 1f;
-
-        if (Mathf.Abs(horizontal) > 0.01f)
-            return horizontal;
-
-        if (playerRigidbody != null)
-            return playerRigidbody.linearVelocity.x;
-
-        return 0f;
-    }
-
-    private void ApplyFlip()
-    {
-        bool finalFlip = facingLeft;
-
-        if (invertFlip)
-            finalFlip = !finalFlip;
-
-        spriteRenderer.flipX = finalFlip;
-    }
-
-    private void Animate(bool isMoving)
+    private void HandleWalkAnimation(float moveX)
     {
         if (walkFrames == null || walkFrames.Length == 0)
             return;
 
+        bool isMoving = Mathf.Abs(moveX) > 0.01f;
+
         if (!isMoving)
         {
-            timer = 0f;
             currentFrame = 0;
+            timer = 0f;
             spriteRenderer.sprite = walkFrames[0];
             return;
         }
@@ -104,11 +57,27 @@ public class SimpleWalkAnimation : MonoBehaviour
             timer = 0f;
 
             currentFrame++;
-
             if (currentFrame >= walkFrames.Length)
                 currentFrame = 0;
 
             spriteRenderer.sprite = walkFrames[currentFrame];
         }
+    }
+
+    private void HandleFlip(float moveX)
+    {
+        if (Mathf.Abs(moveX) < 0.01f)
+            return;
+
+        float direction = moveX > 0 ? 1f : -1f;
+
+        if (!artFacesRight)
+            direction *= -1f;
+
+        transform.localScale = new Vector3(
+            Mathf.Abs(startScale.x) * direction,
+            startScale.y,
+            startScale.z
+        );
     }
 }
