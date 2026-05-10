@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ConstellationPuzzleMVP : MonoBehaviour
 {
+    public event Action<string, Sprite> OnPuzzleSolved;
+
     [System.Serializable]
     public struct StarLine
     {
@@ -17,7 +20,7 @@ public class ConstellationPuzzleMVP : MonoBehaviour
     [SerializeField] private Transform correctViewPoint;
 
     [Header("Solve Settings")]
-    [SerializeField] private float correctZoneAngle = 12f;
+    [SerializeField] private float correctZoneAngle = 7f;
     [SerializeField] private float holdTimeToSolve = 1f;
 
     [Header("Camera Control")]
@@ -32,7 +35,7 @@ public class ConstellationPuzzleMVP : MonoBehaviour
     [Header("Zodiac Image Fade")]
     [SerializeField] private Image zodiacImage;
     [SerializeField] private CanvasGroup zodiacCanvasGroup;
-    [SerializeField] private float zodiacFadeDuration = 1.2f;
+    [SerializeField] private float zodiacFadeDuration = 1f;
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
@@ -41,6 +44,9 @@ public class ConstellationPuzzleMVP : MonoBehaviour
     private float holdTimer;
     private bool solved;
     private Transform linesRoot;
+
+    private string currentConstellationName;
+    private Sprite currentConstellationSprite;
 
     private void Start()
     {
@@ -68,24 +74,45 @@ public class ConstellationPuzzleMVP : MonoBehaviour
             }
 
             if (holdTimer >= holdTimeToSolve)
-            {
-                if (showDebugLogs)
-                    Debug.Log("УСЛОВИЕ РЕШЕНИЯ ДОСТИГНУТО");
-
                 SolvePuzzle();
-            }
         }
         else
         {
-            if (holdTimer > 0f && showDebugLogs)
-            {
-                Debug.Log(
-                    $"Вышел из зоны: {angle:0.00}°. " +
-                    "Таймер сброшен."
-                );
-            }
-
             holdTimer = 0f;
+        }
+    }
+
+    public void SetupLevel(
+        string constellationName,
+        Transform[] newStarPoints,
+        StarLine[] newStarLines,
+        Transform newCorrectViewPoint,
+        Sprite newZodiacSprite
+    )
+    {
+        currentConstellationName = constellationName;
+        currentConstellationSprite = newZodiacSprite;
+
+        starPoints = newStarPoints;
+        starLines = newStarLines;
+        correctViewPoint = newCorrectViewPoint;
+
+        solved = false;
+        holdTimer = 0f;
+
+        RemoveOldLines();
+        PrepareZodiacImage();
+
+        if (zodiacImage != null)
+            zodiacImage.sprite = newZodiacSprite;
+
+        if (orbitCameraScript != null)
+        {
+            orbitCameraScript.SendMessage(
+                "SetCanControl",
+                true,
+                SendMessageOptions.DontRequireReceiver
+            );
         }
     }
 
@@ -93,19 +120,19 @@ public class ConstellationPuzzleMVP : MonoBehaviour
     {
         if (constellationCenter == null)
         {
-            Debug.LogError("Не назначен Constellation Center.");
+            Debug.LogError("Constellation Center не назначен.");
             return 180f;
         }
 
         if (mainCamera == null)
         {
-            Debug.LogError("Не назначена Main Camera.");
+            Debug.LogError("Main Camera не назначена.");
             return 180f;
         }
 
         if (correctViewPoint == null)
         {
-            Debug.LogError("Не назначен Correct View Point.");
+            Debug.LogError("Correct View Point не назначен.");
             return 180f;
         }
 
@@ -132,25 +159,20 @@ public class ConstellationPuzzleMVP : MonoBehaviour
         DisableCameraControl();
         DrawConstellationLines();
         StartCoroutine(FadeInZodiacImage());
+
+        OnPuzzleSolved?.Invoke(currentConstellationName, currentConstellationSprite);
     }
 
     private void DisableCameraControl()
     {
         if (orbitCameraScript == null)
-        {
-            Debug.LogWarning("Orbit Camera Script не назначен.");
             return;
-        }
 
         orbitCameraScript.SendMessage(
             "SetCanControl",
             false,
             SendMessageOptions.DontRequireReceiver
         );
-
-        // ВАЖНО:
-        // Не отключаем сам компонент orbitCameraScript.enabled = false.
-        // Достаточно запретить управление через SetCanControl(false).
     }
 
     private void DrawConstellationLines()
@@ -226,10 +248,7 @@ public class ConstellationPuzzleMVP : MonoBehaviour
     private void PrepareZodiacImage()
     {
         if (zodiacImage == null)
-        {
-            Debug.LogWarning("Zodiac Image не назначен.");
             return;
-        }
 
         zodiacImage.gameObject.SetActive(true);
 
@@ -245,10 +264,7 @@ public class ConstellationPuzzleMVP : MonoBehaviour
     private IEnumerator FadeInZodiacImage()
     {
         if (zodiacImage == null)
-        {
-            Debug.LogWarning("Нельзя показать Zodiac Image: объект не назначен.");
             yield break;
-        }
 
         zodiacImage.gameObject.SetActive(true);
 

@@ -36,9 +36,7 @@ public class BlenderStyleOrbitCamera : MonoBehaviour
         }
 
         if (cameraTransform == null && Camera.main != null)
-        {
             cameraTransform = Camera.main.transform;
-        }
 
         Vector3 euler = transform.rotation.eulerAngles;
 
@@ -115,6 +113,50 @@ public class BlenderStyleOrbitCamera : MonoBehaviour
     public Quaternion GetCurrentRotation()
     {
         return Quaternion.Euler(pitch, yaw, 0f);
+    }
+
+    public void RandomizeViewAwayFromCorrectPoint(
+        Transform constellationCenter,
+        Transform correctViewPoint,
+        float minAngleFromCorrectPoint = 50f
+    )
+    {
+        if (constellationCenter == null || correctViewPoint == null)
+        {
+            Debug.LogWarning("Ќе назначен Constellation Center или CorrectViewPoint дл€ случайного старта камеры.");
+            return;
+        }
+
+        Vector3 correctDirection =
+            (correctViewPoint.position - constellationCenter.position).normalized;
+
+        const int maxAttempts = 100;
+
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            float randomYaw = Random.Range(-180f, 180f);
+            float randomPitch = Random.Range(minPitch, maxPitch);
+
+            Quaternion randomRigRotation = Quaternion.Euler(randomPitch, randomYaw, 0f);
+
+            Vector3 randomCameraDirection =
+                randomRigRotation * Vector3.back;
+
+            float angleFromCorrect =
+                Vector3.Angle(randomCameraDirection, correctDirection);
+
+            if (angleFromCorrect >= minAngleFromCorrectPoint)
+            {
+                yaw = randomYaw;
+                pitch = randomPitch;
+                ApplyCameraPosition();
+                return;
+            }
+        }
+
+        yaw = NormalizeAngle(yaw + 120f);
+        pitch = Mathf.Clamp(pitch + 25f, minPitch, maxPitch);
+        ApplyCameraPosition();
     }
 
     private float NormalizeAngle(float angle)

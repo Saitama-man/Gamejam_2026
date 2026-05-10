@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.49019608}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.31764707}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -537,6 +537,7 @@ RectTransform:
   - {fileID: 618830788}
   - {fileID: 1444149833}
   - {fileID: 418272454}
+  - {fileID: 1032656745}
   m_Father: {fileID: 1144879268}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -554,6 +555,7 @@ GameObject:
   m_Component:
   - component: {fileID: 857809607}
   - component: {fileID: 857809608}
+  - component: {fileID: 857809609}
   m_Layer: 0
   m_Name: Puzzle Manager
   m_TagString: Untagged
@@ -636,11 +638,137 @@ MonoBehaviour:
   zodiacFadeDuration: 1
   showDebugLogs: 1
   drawDebugGizmos: 1
+--- !u!114 &857809609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857809604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eba3332a6f76d5b4880b5e3913ebb3f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
+  levels:
+  - constellationName: Aquila
+    constellationPrefab: {fileID: 6613964753693977666, guid: 00166fdb8307c87498af3bd156220395, type: 3}
+    zodiacSprite: {fileID: 21300000, guid: 7caf9ab2d1883ce40b5d33b800bcf34f, type: 3}
+    starLines: []
+  - constellationName: Cygnus
+    constellationPrefab: {fileID: 1746339258723299003, guid: e298d11e944690a46a87d25df9897d49, type: 3}
+    zodiacSprite: {fileID: 21300000, guid: f4ca0e770e518164c92b3da23a114baf, type: 3}
+    starLines: []
+  - constellationName: Pegas
+    constellationPrefab: {fileID: 5804293282035002908, guid: f9abe1bb910cfac408c85bb11bfa94ac, type: 3}
+    zodiacSprite: {fileID: 21300000, guid: 5596c28cbb7c63a4fb61206befa6a3b6, type: 3}
+    starLines: []
+  - constellationName: Pisces
+    constellationPrefab: {fileID: 1010631831849080597, guid: ccd04ef13377845409f9c37dcafe07b9, type: 3}
+    zodiacSprite: {fileID: 21300000, guid: 6688e7108a46a32469116de9fbb6d102, type: 3}
+    starLines: []
+  - constellationName: Ursa Minor
+    constellationPrefab: {fileID: 757983276105428363, guid: b4b92caf96d941f478a05126855a1626, type: 3}
+    zodiacSprite: {fileID: 21300000, guid: 48ae1d09ddbdcb549a35c57de817d8e3, type: 3}
+    starLines: []
+  constellationHolder: {fileID: 2034827495}
+  puzzle: {fileID: 0}
+  timer: {fileID: 0}
+  mapUI: {fileID: 0}
+  orbitCamera: {fileID: 0}
+  constellationCenter: {fileID: 0}
+  sharedCorrectViewPoint: {fileID: 0}
+  minStartAngleFromCorrectPoint: 50
+  winSceneName: 
+  loseSceneName: 
+  delayBeforeNextConstellation: 1.5
 --- !u!4 &879857389 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5820627085037521404, guid: 00166fdb8307c87498af3bd156220395, type: 3}
   m_PrefabInstance: {fileID: 1339162482}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &898252247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 898252248}
+  - component: {fileID: 898252249}
+  m_Layer: 0
+  m_Name: 'Time manager '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &898252248
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898252247}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 11.8089, y: -0, z: 6.34453}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &898252249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898252247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e25294d78624e740986371b60fc585c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleTimer
+  startSeconds: 300
+  timerText: {fileID: 0}
+--- !u!1 &1032656744
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1032656745}
+  m_Layer: 5
+  m_Name: Map Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1032656745
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032656744}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1476080890}
+  m_Father: {fileID: 721647290}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1070422844
 GameObject:
   m_ObjectHideFlags: 0
@@ -992,6 +1120,59 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 250140832952296321, guid: 00166fdb8307c87498af3bd156220395, type: 3}
   m_PrefabInstance: {fileID: 1339162482}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1309063352
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1309063353}
+  - component: {fileID: 1309063354}
+  m_Layer: 0
+  m_Name: Map Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1309063353
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309063352}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 11.8089, y: -0, z: 6.34453}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1309063354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309063352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06fa86a797473144f93b003a8b0f257f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleMapUI
+  mapButton: {fileID: 0}
+  closeButton: {fileID: 0}
+  mapPanel: {fileID: 0}
+  slots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1001 &1339162482
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1169,6 +1350,41 @@ Transform:
   - {fileID: 1804826576}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1476080889
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1476080890}
+  m_Layer: 5
+  m_Name: Close Button
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1476080890
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476080889}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1032656745}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1804826575
 GameObject:
   m_ObjectHideFlags: 0
@@ -1219,7 +1435,7 @@ GameObject:
   - component: {fileID: 1876933950}
   - component: {fileID: 1876933949}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Timer Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1464,3 +1680,5 @@ SceneRoots:
   - {fileID: 1445316712}
   - {fileID: 857809607}
   - {fileID: 1144879268}
+  - {fileID: 898252248}
+  - {fileID: 1309063353}
