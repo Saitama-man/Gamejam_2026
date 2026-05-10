@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,6 +27,11 @@ public class ConstellationPuzzleMVP : MonoBehaviour
     [Header("Camera Control")]
     [SerializeField] private MonoBehaviour orbitCameraScript;
 
+    [Header("Success Camera Pullback")]
+    [SerializeField] private bool useSuccessCameraPullback = true;
+    [SerializeField] private float successCameraDistance = 16f;
+    [SerializeField] private float successCameraPullbackDuration = 1.2f;
+
     [Header("Constellation Lines")]
     [SerializeField] private Transform[] starPoints;
     [SerializeField] private StarLine[] starLines;
@@ -35,7 +41,21 @@ public class ConstellationPuzzleMVP : MonoBehaviour
     [Header("Zodiac Image Fade")]
     [SerializeField] private Image zodiacImage;
     [SerializeField] private CanvasGroup zodiacCanvasGroup;
+    [SerializeField] private TMP_Text zodiacNameText;
+    [SerializeField] private CanvasGroup zodiacNameCanvasGroup;
     [SerializeField] private float zodiacFadeDuration = 1f;
+
+    [Header("Hot Cold Star")]
+    [SerializeField] private Image hotColdFillImage;
+    [SerializeField] private Image hotColdGlowImage;
+    [SerializeField] private float angleForEmptyStar = 75f;
+    [SerializeField] private bool fillStarOnSolved = true;
+
+    [Header("Hot Cold Glow")]
+    [SerializeField] private bool useGlow = true;
+    [SerializeField] private float glowMaxAlpha = 0.65f;
+    [SerializeField] private float glowPulseSpeed = 4f;
+    [SerializeField] private float glowPulseStrength = 0.15f;
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
@@ -43,14 +63,19 @@ public class ConstellationPuzzleMVP : MonoBehaviour
 
     private float holdTimer;
     private bool solved;
+    private bool levelCompletionAlreadySent;
+
     private Transform linesRoot;
+    private Coroutine zodiacFadeCoroutine;
 
     private string currentConstellationName;
     private Sprite currentConstellationSprite;
 
     private void Start()
     {
-        PrepareZodiacImage();
+        PrepareZodiacVisuals();
+        HideZodiacVisualsImmediate();
+        PrepareHotColdStar();
         RemoveOldLines();
     }
 
@@ -60,6 +85,8 @@ public class ConstellationPuzzleMVP : MonoBehaviour
             return;
 
         float angle = GetCameraAngleToCorrectPoint();
+
+        UpdateHotColdStar(angle);
 
         if (angle <= correctZoneAngle)
         {
@@ -90,6 +117,8 @@ public class ConstellationPuzzleMVP : MonoBehaviour
         Sprite newZodiacSprite
     )
     {
+        StopZodiacFade();
+
         currentConstellationName = constellationName;
         currentConstellationSprite = newZodiacSprite;
 
@@ -98,13 +127,21 @@ public class ConstellationPuzzleMVP : MonoBehaviour
         correctViewPoint = newCorrectViewPoint;
 
         solved = false;
+        levelCompletionAlreadySent = false;
         holdTimer = 0f;
 
         RemoveOldLines();
-        PrepareZodiacImage();
+
+        PrepareZodiacVisuals();
 
         if (zodiacImage != null)
             zodiacImage.sprite = newZodiacSprite;
+
+        if (zodiacNameText != null)
+            zodiacNameText.text = constellationName;
+
+        HideZodiacVisualsImmediate();
+        ResetHotColdStar();
 
         if (orbitCameraScript != null)
         {
@@ -156,10 +193,46 @@ public class ConstellationPuzzleMVP : MonoBehaviour
         if (showDebugLogs)
             Debug.Log("Созвездие решено!");
 
-        DisableCameraControl();
-        DrawConstellationLines();
-        StartCoroutine(FadeInZodiacImage());
+        if (fillStarOnSolved)
+        {
+            if (hotColdFillImage != null)
+                hotColdFillImage.fillAmount = 1f;
 
+            if (hotColdGlowImage != null)
+            {
+                hotColdGlowImage.fillAmount = 1f;
+                SetImageAlpha(hotColdGlowImage, glowMaxAlpha);
+            }
+        }
+
+        DisableCameraControl();
+        StartSuccessCameraPullback();
+        DrawConstellationLines();
+
+        StopZodiacFade();
+        zodiacFadeCoroutine = StartCoroutine(FadeInZodiacVisualsThenCompleteLevel());
+    }
+
+    private void StartSuccessCameraPullback()
+    {
+        if (!useSuccessCameraPullback)
+            return;
+
+        if (orbitCameraScript is BlenderStyleOrbitCamera orbitCamera)
+        {
+            orbitCamera.SmoothZoomToDistance(
+                successCameraDistance,
+                successCameraPullbackDuration
+            );
+        }
+    }
+
+    private void CompleteLevelAfterVisuals()
+    {
+        if (levelCompletionAlreadySent)
+            return;
+
+        levelCompletionAlreadySent = true;
         OnPuzzleSolved?.Invoke(currentConstellationName, currentConstellationSprite);
     }
 
@@ -245,40 +318,88 @@ public class ConstellationPuzzleMVP : MonoBehaviour
                starPoints[index] != null;
     }
 
-    private void PrepareZodiacImage()
+    private void PrepareZodiacVisuals()
     {
-        if (zodiacImage == null)
-            return;
+        if (zodiacImage != null)
+        {
+            if (zodiacCanvasGroup == null)
+                zodiacCanvasGroup = zodiacImage.GetComponent<CanvasGroup>();
 
-        zodiacImage.gameObject.SetActive(true);
+            if (zodiacCanvasGroup == null)
+                zodiacCanvasGroup = zodiacImage.gameObject.AddComponent<CanvasGroup>();
+        }
 
-        if (zodiacCanvasGroup == null)
-            zodiacCanvasGroup = zodiacImage.GetComponent<CanvasGroup>();
+        if (zodiacNameText != null)
+        {
+            if (zodiacNameCanvasGroup == null)
+                zodiacNameCanvasGroup = zodiacNameText.GetComponent<CanvasGroup>();
 
-        if (zodiacCanvasGroup == null)
-            zodiacCanvasGroup = zodiacImage.gameObject.AddComponent<CanvasGroup>();
-
-        zodiacCanvasGroup.alpha = 0f;
+            if (zodiacNameCanvasGroup == null)
+                zodiacNameCanvasGroup = zodiacNameText.gameObject.AddComponent<CanvasGroup>();
+        }
     }
 
-    private IEnumerator FadeInZodiacImage()
+    private void HideZodiacVisualsImmediate()
     {
-        if (zodiacImage == null)
+        if (zodiacCanvasGroup != null)
+            zodiacCanvasGroup.alpha = 0f;
+
+        if (zodiacImage != null)
+            zodiacImage.gameObject.SetActive(false);
+
+        if (zodiacNameCanvasGroup != null)
+            zodiacNameCanvasGroup.alpha = 0f;
+
+        if (zodiacNameText != null)
+            zodiacNameText.gameObject.SetActive(false);
+    }
+
+    private void ShowZodiacVisualsImmediate()
+    {
+        if (zodiacImage != null)
+            zodiacImage.gameObject.SetActive(true);
+
+        if (zodiacCanvasGroup != null)
+            zodiacCanvasGroup.alpha = 0f;
+
+        if (zodiacNameText != null)
+            zodiacNameText.gameObject.SetActive(true);
+
+        if (zodiacNameCanvasGroup != null)
+            zodiacNameCanvasGroup.alpha = 0f;
+    }
+
+    private void StopZodiacFade()
+    {
+        if (zodiacFadeCoroutine != null)
+        {
+            StopCoroutine(zodiacFadeCoroutine);
+            zodiacFadeCoroutine = null;
+        }
+    }
+
+    private IEnumerator FadeInZodiacVisualsThenCompleteLevel()
+    {
+        bool hasImage = zodiacImage != null;
+        bool hasName = zodiacNameText != null;
+
+        if (!hasImage && !hasName)
+        {
+            CompleteLevelAfterVisuals();
             yield break;
+        }
 
-        zodiacImage.gameObject.SetActive(true);
-
-        if (zodiacCanvasGroup == null)
-            zodiacCanvasGroup = zodiacImage.GetComponent<CanvasGroup>();
-
-        if (zodiacCanvasGroup == null)
-            zodiacCanvasGroup = zodiacImage.gameObject.AddComponent<CanvasGroup>();
-
-        zodiacCanvasGroup.alpha = 0f;
+        ShowZodiacVisualsImmediate();
 
         if (zodiacFadeDuration <= 0f)
         {
-            zodiacCanvasGroup.alpha = 1f;
+            if (zodiacCanvasGroup != null)
+                zodiacCanvasGroup.alpha = 1f;
+
+            if (zodiacNameCanvasGroup != null)
+                zodiacNameCanvasGroup.alpha = 1f;
+
+            CompleteLevelAfterVisuals();
             yield break;
         }
 
@@ -287,11 +408,96 @@ public class ConstellationPuzzleMVP : MonoBehaviour
         while (timer < zodiacFadeDuration)
         {
             timer += Time.deltaTime;
-            zodiacCanvasGroup.alpha = Mathf.Clamp01(timer / zodiacFadeDuration);
+            float alpha = Mathf.Clamp01(timer / zodiacFadeDuration);
+
+            if (zodiacCanvasGroup != null)
+                zodiacCanvasGroup.alpha = alpha;
+
+            if (zodiacNameCanvasGroup != null)
+                zodiacNameCanvasGroup.alpha = alpha;
+
             yield return null;
         }
 
-        zodiacCanvasGroup.alpha = 1f;
+        if (zodiacCanvasGroup != null)
+            zodiacCanvasGroup.alpha = 1f;
+
+        if (zodiacNameCanvasGroup != null)
+            zodiacNameCanvasGroup.alpha = 1f;
+
+        zodiacFadeCoroutine = null;
+        CompleteLevelAfterVisuals();
+    }
+
+    private void PrepareHotColdStar()
+    {
+        PrepareFilledImage(hotColdFillImage, true);
+        PrepareFilledImage(hotColdGlowImage, false);
+    }
+
+    private void PrepareFilledImage(Image image, bool fullAlpha)
+    {
+        if (image == null)
+            return;
+
+        image.type = Image.Type.Filled;
+        image.fillMethod = Image.FillMethod.Vertical;
+        image.fillOrigin = (int)Image.OriginVertical.Bottom;
+        image.fillAmount = 0f;
+
+        if (fullAlpha)
+            SetImageAlpha(image, 1f);
+        else
+            SetImageAlpha(image, 0f);
+    }
+
+    private void ResetHotColdStar()
+    {
+        if (hotColdFillImage != null)
+            hotColdFillImage.fillAmount = 0f;
+
+        if (hotColdGlowImage != null)
+        {
+            hotColdGlowImage.fillAmount = 0f;
+            SetImageAlpha(hotColdGlowImage, 0f);
+        }
+    }
+
+    private void UpdateHotColdStar(float angle)
+    {
+        float safeEmptyAngle = Mathf.Max(correctZoneAngle + 1f, angleForEmptyStar);
+
+        float progress = 1f - angle / safeEmptyAngle;
+        progress = Mathf.Clamp01(progress);
+
+        if (hotColdFillImage != null)
+            hotColdFillImage.fillAmount = progress;
+
+        if (hotColdGlowImage != null)
+        {
+            hotColdGlowImage.fillAmount = progress;
+
+            if (useGlow)
+            {
+                float pulse = 1f + Mathf.Sin(Time.time * glowPulseSpeed) * glowPulseStrength;
+                float alpha = Mathf.Clamp01(progress * glowMaxAlpha * pulse);
+                SetImageAlpha(hotColdGlowImage, alpha);
+            }
+            else
+            {
+                SetImageAlpha(hotColdGlowImage, progress * glowMaxAlpha);
+            }
+        }
+    }
+
+    private void SetImageAlpha(Image image, float alpha)
+    {
+        if (image == null)
+            return;
+
+        Color color = image.color;
+        color.a = Mathf.Clamp01(alpha);
+        image.color = color;
     }
 
     private void RemoveOldLines()

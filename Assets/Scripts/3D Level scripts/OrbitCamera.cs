@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class BlenderStyleOrbitCamera : MonoBehaviour
@@ -25,6 +26,8 @@ public class BlenderStyleOrbitCamera : MonoBehaviour
     private float yaw;
     private float pitch;
     private bool canControl = true;
+
+    private Coroutine smoothZoomCoroutine;
 
     private void Start()
     {
@@ -157,6 +160,48 @@ public class BlenderStyleOrbitCamera : MonoBehaviour
         yaw = NormalizeAngle(yaw + 120f);
         pitch = Mathf.Clamp(pitch + 25f, minPitch, maxPitch);
         ApplyCameraPosition();
+    }
+
+    public void SmoothZoomToDistance(float targetDistance, float duration)
+    {
+        targetDistance = Mathf.Clamp(targetDistance, minDistance, maxDistance);
+
+        if (smoothZoomCoroutine != null)
+            StopCoroutine(smoothZoomCoroutine);
+
+        smoothZoomCoroutine = StartCoroutine(SmoothZoomRoutine(targetDistance, duration));
+    }
+
+    private IEnumerator SmoothZoomRoutine(float targetDistance, float duration)
+    {
+        float startDistance = distance;
+
+        if (duration <= 0f)
+        {
+            distance = targetDistance;
+            ApplyCameraPosition();
+            smoothZoomCoroutine = null;
+            yield break;
+        }
+
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float t = Mathf.Clamp01(timer / duration);
+            t = t * t * (3f - 2f * t);
+
+            distance = Mathf.Lerp(startDistance, targetDistance, t);
+            ApplyCameraPosition();
+
+            yield return null;
+        }
+
+        distance = targetDistance;
+        ApplyCameraPosition();
+
+        smoothZoomCoroutine = null;
     }
 
     private float NormalizeAngle(float angle)

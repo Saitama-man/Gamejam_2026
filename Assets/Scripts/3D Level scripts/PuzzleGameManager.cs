@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -39,15 +39,13 @@ public class PuzzleGameManager : MonoBehaviour
 
     [Header("Level Transition")]
     [SerializeField] private float levelTransitionDelay = 1.5f;
+    [SerializeField] private PuzzleScreenFader screenFader;
 
     [Header("Timer Result Rules")]
     [SerializeField] private int minimumConstellationsForSuccess = 3;
 
     [Header("Scenes")]
-    [Tooltip("Сцена успеха. Открывается, если игрок собрал минимум нужное количество созвездий или прошёл все уровни.")]
     [SerializeField] private Object successScene;
-
-    [Tooltip("Сцена проигрыша. Открывается, если игрок собрал меньше нужного количества созвездий.")]
     [SerializeField] private Object loseScene;
 
     [Header("Fallback Scene Names")]
@@ -129,7 +127,7 @@ public class PuzzleGameManager : MonoBehaviour
 
         if (level.constellationPrefab == null)
         {
-            Debug.LogError($"У уровня {currentLevelIndex} не назначен Constellation Prefab.");
+            Debug.LogError($"РЈ СѓСЂРѕРІРЅСЏ {currentLevelIndex} РЅРµ РЅР°Р·РЅР°С‡РµРЅ Constellation Prefab.");
             return;
         }
 
@@ -220,10 +218,7 @@ public class PuzzleGameManager : MonoBehaviour
             }
 
             if (foundHolder != null)
-            {
                 constellationHolder = foundHolder;
-                Debug.Log($"Constellation Holder автоматически назначен: {constellationHolder.name}");
-            }
         }
 
         if (constellationHolder == null && constellationCenter != null)
@@ -235,8 +230,6 @@ public class PuzzleGameManager : MonoBehaviour
             newHolder.transform.localScale = Vector3.one;
 
             constellationHolder = newHolder.transform;
-
-            Debug.LogWarning("CurrentConstellationHolder не найден, поэтому был создан автоматически.");
         }
     }
 
@@ -244,43 +237,43 @@ public class PuzzleGameManager : MonoBehaviour
     {
         if (levels == null || levels.Length == 0)
         {
-            Debug.LogError("Levels пустой. Добавь созвездия в PuzzleGameManager.");
+            Debug.LogError("Levels РїСѓСЃС‚РѕР№. Р”РѕР±Р°РІСЊ СЃРѕР·РІРµР·РґРёСЏ РІ PuzzleGameManager.");
             return false;
         }
 
         if (constellationCenter == null)
         {
-            Debug.LogError("Constellation Center не назначен.");
+            Debug.LogError("Constellation Center РЅРµ РЅР°Р·РЅР°С‡РµРЅ.");
             return false;
         }
 
         if (sharedCorrectViewPoint == null)
         {
-            Debug.LogError("Shared Correct View Point не назначен.");
+            Debug.LogError("Shared Correct View Point РЅРµ РЅР°Р·РЅР°С‡РµРЅ.");
             return false;
         }
 
         if (constellationHolder == null)
         {
-            Debug.LogError("Constellation Holder не назначен.");
+            Debug.LogError("Constellation Holder РЅРµ РЅР°Р·РЅР°С‡РµРЅ.");
             return false;
         }
 
         if (constellationHolder == sharedCorrectViewPoint)
         {
-            Debug.LogError("Constellation Holder всё ещё равен CorrectViewPoint. Назначь CurrentConstellationHolder.");
+            Debug.LogError("Constellation Holder РІСЃС‘ РµС‰С‘ СЂР°РІРµРЅ CorrectViewPoint. РќР°Р·РЅР°С‡СЊ CurrentConstellationHolder.");
             return false;
         }
 
         if (constellationHolder == constellationCenter)
         {
-            Debug.LogError("Constellation Holder не должен быть Constellation Center. Назначь CurrentConstellationHolder.");
+            Debug.LogError("Constellation Holder РЅРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Constellation Center. РќР°Р·РЅР°С‡СЊ CurrentConstellationHolder.");
             return false;
         }
 
         if (puzzle == null)
         {
-            Debug.LogError("Puzzle не назначен.");
+            Debug.LogError("Puzzle РЅРµ РЅР°Р·РЅР°С‡РµРЅ.");
             return false;
         }
 
@@ -340,14 +333,6 @@ public class PuzzleGameManager : MonoBehaviour
 
             return a.GetSiblingIndex().CompareTo(b.GetSiblingIndex());
         });
-
-        if (result.Count == 0)
-        {
-            Debug.LogWarning(
-                $"В префабе {root.name} не найдены звёзды. " +
-                "Назови дочерние объекты Star, Star0, Star1... или 0, 1, 2..."
-            );
-        }
 
         return result.ToArray();
     }
@@ -441,12 +426,24 @@ public class PuzzleGameManager : MonoBehaviour
 
     private IEnumerator LoadNextAfterDelay()
     {
+        if (timer != null)
+            timer.PauseTimer();
+
         float safeDelay = Mathf.Max(0f, levelTransitionDelay);
 
         if (safeDelay > 0f)
             yield return new WaitForSeconds(safeDelay);
 
+        if (screenFader != null)
+            yield return screenFader.FadeOut();
+
         LoadCurrentLevel();
+
+        if (screenFader != null)
+            yield return screenFader.FadeIn();
+
+        if (timer != null && !gameFinished)
+            timer.ResumeTimer();
     }
 
     private void PauseTimer()
@@ -481,7 +478,7 @@ public class PuzzleGameManager : MonoBehaviour
 
         StopActiveSystems();
 
-        LoadScene(successScene, successSceneName, "Успех");
+        LoadScene(successScene, successSceneName, "РЈСЃРїРµС…");
     }
 
     private void FinishWithLose()
@@ -493,7 +490,7 @@ public class PuzzleGameManager : MonoBehaviour
 
         StopActiveSystems();
 
-        LoadScene(loseScene, loseSceneName, "Проигрыш");
+        LoadScene(loseScene, loseSceneName, "РџСЂРѕРёРіСЂС‹С€");
     }
 
     private void StopActiveSystems()
@@ -520,7 +517,7 @@ public class PuzzleGameManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(sceneName))
         {
-            Debug.LogWarning($"{debugContext}: сцена не назначена.");
+            Debug.LogWarning($"{debugContext}: СЃС†РµРЅР° РЅРµ РЅР°Р·РЅР°С‡РµРЅР°.");
             return;
         }
 
