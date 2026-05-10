@@ -45,6 +45,7 @@ public class PuzzleGameManager : MonoBehaviour
     [SerializeField] private float levelTransitionDelay = 1.5f;
     [SerializeField] private PuzzleScreenFader screenFader;
     [SerializeField] private bool openMapAfterEachSolvedLevel = true;
+    [SerializeField] private float mapOpenDelayAfterSolved = 1f;
 
     [Header("Timer Result Rules")]
     [SerializeField] private int minimumConstellationsForSuccess = 3;
@@ -434,6 +435,11 @@ public class PuzzleGameManager : MonoBehaviour
     {
         if (openMapAfterEachSolvedLevel && mapUI != null)
         {
+            float safeMapDelay = Mathf.Max(0f, mapOpenDelayAfterSolved);
+
+            if (safeMapDelay > 0f)
+                yield return new WaitForSeconds(safeMapDelay);
+
             mapUI.OpenMap();
 
             while (mapUI.IsOpen)
