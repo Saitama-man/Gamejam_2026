@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LoadingScreen.unity
     guid: a8ce8d19405b2d049a08f53c3dade4d4
+  - enabled: 1
+    path: Assets/Scenes/LevelRealDay.unity
+    guid: 860f48063c1b5a549ac777995a704b43
+  - enabled: 1
+    path: Assets/Scenes/LevelRealNight.unity
+    guid: a4b806ba36f043643b3611e4a4e43f99
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

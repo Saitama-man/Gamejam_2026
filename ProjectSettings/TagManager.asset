@@ -41,6 +41,30 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 377381239
+    locked: 0
+  - name: Mountains
+    uniqueID: 3524028645
+    locked: 0
+  - name: CastleNFloor
+    uniqueID: 1187836269
+    locked: 0
+  - name: BackgroundTrees
+    uniqueID: 3630408785
+    locked: 0
+  - name: Player
+    uniqueID: 2497341713
+    locked: 0
+  - name: Trees
+    uniqueID: 855410527
+    locked: 0
+  - name: Clouds
+    uniqueID: 3705868881
+    locked: 0
+  - name: UI
+    uniqueID: 1702225401
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1
