@@ -1551,26 +1551,26 @@ MonoBehaviour:
     zodiacSprite: {fileID: 21300000, guid: 48ae1d09ddbdcb549a35c57de817d8e3, type: 3}
     constellationDescription: 'The Great Bear
 
-      
+
 
       Origin Myth:
 
-      
+
 
       The
       beautiful nymph Callisto was seduced by Zeus, angering the goddess Hera.
 
-      
+
 
       To
       protect Callisto (or as a punishment by Hera), she was transformed into a wild
       bear, forced to wander the forests.
 
-      
 
-      Years later, her son Arcas
-      nearly hunted her. To prevent this tragedy, Zeus cast them both into the night
-      sky as the Great and Little Bears.'
+
+      Years later, her son Arcas nearly
+      hunted her. To prevent this tragedy, Zeus cast them both into the night sky
+      as the Great and Little Bears.'
     starLines:
     - from: 4
       to: 3
@@ -1589,26 +1589,26 @@ MonoBehaviour:
     zodiacSprite: {fileID: 21300000, guid: 7caf9ab2d1883ce40b5d33b800bcf34f, type: 3}
     constellationDescription: 'The Thunderer''s Bird
 
-      
+
 
       Origin Myth:
 
-      
+
 
       Aquila
       represents the personal eagle of Zeus, tasked with carrying and retrieving
       the god''s devastating thunderbolts.
 
-      
 
-      The eagle was famously
-      sent by Zeus to Mount Ida to abduct the handsome youth Ganymede, bringing him
-      to Olympus to serve as the gods'' cupbearer.
 
-      
+      The eagle was famously sent by
+      Zeus to Mount Ida to abduct the handsome youth Ganymede, bringing him to Olympus
+      to serve as the gods'' cupbearer.
 
-      In a darker myth,
-      it is the same eagle that tormented the chained titan Prometheus.'
+
+
+      In a darker myth, it is the same
+      eagle that tormented the chained titan Prometheus.'
     starLines:
     - from: 6
       to: 1
@@ -1635,26 +1635,26 @@ MonoBehaviour:
     zodiacSprite: {fileID: 21300000, guid: f4ca0e770e518164c92b3da23a114baf, type: 3}
     constellationDescription: 'Celestial Swan
 
-      
+
 
       Origin Myth:
 
-      
+
 
       Zeus
       transformed himself into a magnificent swan to seduce Leda, Queen of Sparta
       (or, in some versions, the goddess Nemesis).
 
-      
 
-      This divine union
-      resulted in the birth of the Gemini twins (Castor and Pollux) and Helen of
-      Troy.
 
-      
+      This divine union resulted
+      in the birth of the Gemini twins (Castor and Pollux) and Helen of Troy.
 
-      Another legend links the swan to the tragic musician
-      Orpheus, placed in the sky near his beloved Lyre after his death.'
+
+
+      Another
+      legend links the swan to the tragic musician Orpheus, placed in the sky near
+      his beloved Lyre after his death.'
     starLines:
     - from: 2
       to: 1
@@ -1679,11 +1679,11 @@ MonoBehaviour:
     zodiacSprite: {fileID: 21300000, guid: c0a15632e809bcd4fba4d3f76a25ff59, type: 3}
     constellationDescription: 'The Winged Horse
 
-      
+
 
       Origin Myth:
 
-      
+
 
       When
       the hero Perseus beheaded the Gorgon Medusa, the pure white winged horse Pegasus
@@ -1729,26 +1729,26 @@ MonoBehaviour:
     zodiacSprite: {fileID: 21300000, guid: 6688e7108a46a32469116de9fbb6d102, type: 3}
     constellationDescription: 'The Bound Fishes
 
-      
+
 
       Origin Myth:
 
-      
+
 
       To
       escape the terrifying, multi-headed monster Typhon, the goddess of love Aphrodite
       and her son Eros plunged into the Euphrates river.
 
-      
+
 
       They instantly
       transformed themselves into fish to swim to safety.
 
-      
 
-      To ensure
-      they would not lose each other in the dark, churning waters, they tied their
-      tails together with a strong silken cord.'
+
+      To ensure they
+      would not lose each other in the dark, churning waters, they tied their tails
+      together with a strong silken cord.'
     starLines:
     - from: 0
       to: 1
@@ -1799,10 +1799,10 @@ MonoBehaviour:
   openMapAfterEachSolvedLevel: 1
   mapOpenDelayAfterSolved: 1
   minimumConstellationsForSuccess: 3
-  successScene: {fileID: 0}
-  loseScene: {fileID: 0}
-  successSceneName: 
-  loseSceneName: 
+  successScene: {fileID: 102900000, guid: 4df36a0e2cd2e6640b7725e8443155a5, type: 3}
+  loseScene: {fileID: 102900000, guid: 87541e79474b39f4285b6d3af8d7e53a, type: 3}
+  successSceneName: Light
+  loseSceneName: LoseScene
 --- !u!4 &886586539 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6905409268739882024, guid: ccd04ef13377845409f9c37dcafe07b9, type: 3}

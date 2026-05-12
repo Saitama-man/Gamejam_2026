@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: eae59e15db51bfc48b47ad9528931b7e
+  - enabled: 1
     path: Assets/Scenes/Intro_observatory.unity
     guid: 145e3f168748f8e41a4475b410033543
   - enabled: 1
@@ -24,9 +27,6 @@ EditorBuildSettings:
     path: Assets/Scenes/LevelRealNight.unity
     guid: a4b806ba36f043643b3611e4a4e43f99
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: eae59e15db51bfc48b47ad9528931b7e
-  - enabled: 1
     path: Assets/Scenes/NightCutScene.unity
     guid: c6a106d52be1fe741b3bbdb9684cfdcb
   - enabled: 1
@@ -35,6 +35,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ObservatoryCutScene.unity
     guid: 305886d694fe59b4aa95bade67fa4714
+  - enabled: 1
+    path: Assets/Scenes/Level2_3D.unity
+    guid: d404fe3fd56851441a106f34b6339cc1
+  - enabled: 1
+    path: Assets/Scenes/Light.unity
+    guid: 4df36a0e2cd2e6640b7725e8443155a5
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
