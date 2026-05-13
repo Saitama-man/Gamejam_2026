@@ -3455,7 +3455,7 @@ MonoBehaviour:
   zoomSensitivity: 2
   minDistance: 4
   maxDistance: 25
-  useMiddleMouseButton: 1
+  useMiddleMouseButton: 0
 --- !u!1 &1444149832
 GameObject:
   m_ObjectHideFlags: 0
